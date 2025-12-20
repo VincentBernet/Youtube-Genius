@@ -5,5 +5,6 @@ export const Route = createFileRoute('/demo/account')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/demo/account"!</div>
+  return       <section className="relative py-20 px-6 text-center overflow-hidden">
+Hello "/demo/account"!</section>
 }

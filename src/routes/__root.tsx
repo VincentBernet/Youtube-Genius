@@ -17,7 +17,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Noto',
       },
     ],
     links: [
@@ -39,7 +39,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Header />
+        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
         {children}
+        </div>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
