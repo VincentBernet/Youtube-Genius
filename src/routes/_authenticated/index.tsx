@@ -9,15 +9,7 @@ const App = () => {
 	const { loginWithRedirect } = useAuth0();
 	return (
 		<section className="relative py-20 px-6 text-center overflow-hidden">
-			Time to learn 📚
-			<div>
-				{data.map(({ _id, text }) => (
-					<div key={_id}>{text}</div>
-				))}
-			</div>
-			<button onClick={() => loginWithRedirect()} type="button">
-				Log in
-			</button>
+			<h1 className="text-4xl font-bold">Time to learn 📚</h1>
 		</section>
 	);
 };
