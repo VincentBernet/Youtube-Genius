@@ -9,6 +9,8 @@
  */
 
 import type * as conversations_mutations from "../conversations/mutations.js";
+import type * as conversations_queries from "../conversations/queries.js";
+import type * as http from "../http.js";
 import type * as users_mutations from "../users/mutations.js";
 
 import type {
@@ -19,6 +21,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   "conversations/mutations": typeof conversations_mutations;
+  "conversations/queries": typeof conversations_queries;
+  http: typeof http;
   "users/mutations": typeof users_mutations;
 }>;
 

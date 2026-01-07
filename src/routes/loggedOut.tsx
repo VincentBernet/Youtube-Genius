@@ -1,12 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { LogIn } from "lucide-react";
 
-export const Route = createFileRoute("/loggedOut")({
-	component: RouteComponent,
-});
-
-function RouteComponent() {
+const RouteComponent = () => {
 	const { loginWithRedirect } = useAuth0();
 
 	return (
@@ -27,4 +22,8 @@ function RouteComponent() {
 			</div>
 		</div>
 	);
-}
+};
+
+export const Route = createFileRoute("/loggedOut")({
+	component: RouteComponent,
+});

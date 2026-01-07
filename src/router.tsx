@@ -32,8 +32,8 @@ export const getRouter = () => {
 
 	console.log(
 		typeof window !== "undefined"
-			? `Client side ${window.location.origin}`
-			: `Server side`,
+			? `🟢 Client side ${window.location.origin}`
+			: `🔴 Server side`,
 	);
 
 	const router = routerWithQueryClient(

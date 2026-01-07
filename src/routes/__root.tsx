@@ -6,14 +6,14 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import NotFound from "@/components/NotFound";
+import NotFound from "@/commons/components/NotFound";
 import { ThemeInit } from "../../.flowbite-react/init";
-import Header from "../components/Header";
+import Header from "../commons/components/Header";
 import appCss from "../styles.css?url";
 
 const RootDocument = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<html lang="en">
+		<html lang="en" className="bg-slate-900">
 			<head>
 				<HeadContent />
 			</head>

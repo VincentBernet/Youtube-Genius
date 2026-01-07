@@ -21,14 +21,17 @@ const Header = () => {
 		<>
 			<header className="p-4 flex items-center bg-gray-800 text-white shadow-lg">
 				<div className="flex items-center justify-between w-full">
-					<button
-						onClick={() => setIsOpen(true)}
-						className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-						aria-label="Open menu"
-						type="button"
-					>
-						<Menu size={24} />
-					</button>
+					<div className="flex items-center gap-2">
+						<button
+							onClick={() => setIsOpen(true)}
+							className="p-2 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+							aria-label="Open menu"
+							type="button"
+						>
+							<Menu size={24} />
+						</button>
+						<h1 className="text-xl font-bold">Time to learn 📚</h1>
+					</div>
 					{isAuthenticated && !isLoading ? (
 						<div className="flex items-center gap-1">
 							<Link
@@ -59,7 +62,7 @@ const Header = () => {
 										},
 									});
 								}}
-								className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+								className="p-2 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
 								aria-label="Logout"
 								type="button"
 							>
@@ -68,8 +71,8 @@ const Header = () => {
 						</div>
 					) : (
 						<Link
-							to="/"
-							className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+							to="/chat"
+							className="p-2 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
 							aria-label="Login"
 						>
 							<LogIn size={24} />
@@ -87,7 +90,7 @@ const Header = () => {
 					<h2 className="text-xl font-bold">Navigation</h2>
 					<button
 						onClick={() => setIsOpen(false)}
-						className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+						className="p-2 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
 						aria-label="Close menu"
 						type="button"
 					>
@@ -97,7 +100,7 @@ const Header = () => {
 
 				<nav className="flex-1 p-4 overflow-y-auto">
 					<Link
-						to="/"
+						to="/chat"
 						onClick={() => setIsOpen(false)}
 						className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
 						activeProps={{

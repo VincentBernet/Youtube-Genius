@@ -2,6 +2,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Globe, Mail, Shield, User } from "lucide-react";
 
+const InfoRow = ({
+	label,
+	value,
+}: {
+	label: string;
+	value: string | undefined | null;
+}) => {
+	return (
+		<div className="flex flex-col">
+			<span className="text-slate-500 text-xs uppercase tracking-wider mb-1">
+				{label}
+			</span>
+			<span className="text-white">{value || "—"}</span>
+		</div>
+	);
+};
+
 const RouteComponent = () => {
 	const { user } = useAuth0();
 
@@ -119,23 +136,6 @@ const RouteComponent = () => {
 		</div>
 	);
 };
-
-function InfoRow({
-	label,
-	value,
-}: {
-	label: string;
-	value: string | undefined | null;
-}) {
-	return (
-		<div className="flex flex-col">
-			<span className="text-slate-500 text-xs uppercase tracking-wider mb-1">
-				{label}
-			</span>
-			<span className="text-white">{value || "—"}</span>
-		</div>
-	);
-}
 
 export const Route = createFileRoute("/_authenticated/account")({
 	component: RouteComponent,

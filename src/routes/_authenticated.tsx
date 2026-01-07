@@ -2,14 +2,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useConvexAuth, useMutation } from "convex/react";
 import { useEffect, useRef } from "react";
-import Loading from "@/components/Loading";
+import Loading from "@/commons/components/Loading";
 import { api } from "../../convex/_generated/api";
 
-export const Route = createFileRoute("/_authenticated")({
-	component: AuthenticatedLayout,
-});
-
-function AuthenticatedLayout() {
+const AuthenticatedLayout = () => {
 	const { isLoading, isAuthenticated } = useConvexAuth();
 	const { loginWithRedirect } = useAuth0();
 	const storeUser = useMutation(api.users.mutations.store);
@@ -46,4 +42,8 @@ function AuthenticatedLayout() {
 	}
 
 	return <Outlet />;
-}
+};
+
+export const Route = createFileRoute("/_authenticated")({
+	component: AuthenticatedLayout,
+});
