@@ -1,0 +1,8 @@
+---
+globs: *.tsx
+alwaysApply: false
+---
+
+- Keep components as small as possible
+- Separate UI from the business logic
+- Extract utils from your components, so you can test those utils
