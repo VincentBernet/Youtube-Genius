@@ -22,7 +22,7 @@ const ConversationsSidebar = ({
 	onNewConversation,
 }: ConversationsSidebarProps) => {
 	return (
-		<aside className="w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full">
+		<aside className="w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full min-h-0">
 			{/* New conversation button */}
 			<div className="p-4">
 				<button

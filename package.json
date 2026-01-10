@@ -13,8 +13,9 @@
     "format:fix": "biome format --write",
     "lint": "biome lint",
     "lint:fix": "biome lint --write",
-    "check": "biome check",
-    "check:fix": "biome check --write"
+    "tsc": "tsc",
+    "check": "biome check && pnpm tsc && pnpm test",
+    "check:fix": "biome check --write && pnpm tsc && pnpm test"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.3",

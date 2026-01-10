@@ -1,7 +1,8 @@
 import { httpRouter } from "convex/server";
-import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
+import { httpAction } from "./_generated/server";
+import { ModelAvailable } from "./types";
 
 const http = httpRouter();
 
@@ -16,12 +17,12 @@ http.route({
 			conversationId: Id<"conversations">;
 			content: string;
 			metadata?: {
-				model?: string;
-				promptTokens?: number;
-				completionTokens?: number;
-				totalTokens?: number;
-				latencyMs?: number;
-				finishReason?: string;
+				model: ModelAvailable;
+				inputTokens: number;
+				outputTokens: number;
+				totalTokens: number;
+				latencyMs: number;
+				finishReason: string;
 			};
 		};
 
@@ -55,6 +56,43 @@ http.route({
 		}
 	}),
 });
+
+// Add this route alongside saveAssistantMessage
+http.route({
+	path: "/generateTitle",
+	method: "POST",
+	handler: httpAction(async (ctx, request) => {
+	  const { conversationId, title } = await request.json() as {
+		conversationId: Id<"conversations">;
+		title: string;
+	  };
+  
+	  if (!conversationId || !title) {
+		return new Response(
+		  JSON.stringify({ error: "Missing conversationId or title" }),
+		  { status: 400, headers: { "Content-Type": "application/json" } }
+		);
+	  }
+  
+	  try {
+		await ctx.runMutation(
+		  internal.conversations.mutations.updateTitleInternal,
+		  { conversationId, title }
+		);
+  
+		return new Response(
+		  JSON.stringify({ success: true }),
+		  { status: 200, headers: { "Content-Type": "application/json" } }
+		);
+	  } catch (error) {
+		console.error("Failed to update title:", error);
+		return new Response(
+		  JSON.stringify({ error: "Failed to update title" }),
+		  { status: 500, headers: { "Content-Type": "application/json" } }
+		);
+	  }
+	}),
+  });
 
 export default http;
 

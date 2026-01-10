@@ -17,10 +17,10 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
 			<head>
 				<HeadContent />
 			</head>
-			<body>
+			<body className="flex flex-col h-screen overflow-hidden">
 				<ThemeInit />
 				<Header />
-				<div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
+				<div className="flex-1 overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
 					{children}
 				</div>
 				<TanStackDevtools

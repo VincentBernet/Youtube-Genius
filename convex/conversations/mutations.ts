@@ -1,10 +1,14 @@
-import { mutation, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
+import { internalMutation, mutation } from "../_generated/server";
+import { modelValidator } from "../types";
 
 // Creates a new conversation with the first user message
 export const createWithFirstMessage = mutation({
-	args: {
+	args: {	
 		content: v.string(),
+		title: v.string(),
+		systemPrompt: v.string(),
+		model: modelValidator,
 	},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
@@ -27,6 +31,9 @@ export const createWithFirstMessage = mutation({
 		// Create a new conversation
 		const conversationId = await ctx.db.insert("conversations", {
 			userId: user._id,
+			title: args.title,
+			systemPrompt: args.systemPrompt,
+			model: args.model,
 			createdAt: now,
 			updatedAt: now,
 		});
@@ -96,12 +103,12 @@ export const addAssistantMessage = internalMutation({
 		conversationId: v.id("conversations"),
 		content: v.string(),
 		metadata: v.optional(v.object({
-			model: v.optional(v.string()),
-			promptTokens: v.optional(v.number()),
-			completionTokens: v.optional(v.number()),
-			totalTokens: v.optional(v.number()),
-			latencyMs: v.optional(v.number()),
-			finishReason: v.optional(v.string()),
+			model: modelValidator,
+			inputTokens: v.number(),
+			outputTokens: v.number(),
+			totalTokens: v.number(),
+			latencyMs: v.number(),
+			finishReason: v.string(),
 		})),
 	},
 	handler: async (ctx, args) => {
@@ -158,3 +165,17 @@ export const updateTitle = mutation({
 		return args.conversationId;
 	},
 });
+
+// Internal mutation for updating title (called from backend without auth)
+export const updateTitleInternal = internalMutation({
+	args: {
+	  conversationId: v.id("conversations"),
+	  title: v.string(),
+	},
+	handler: async (ctx, args) => {
+	  await ctx.db.patch(args.conversationId, {
+		title: args.title,
+	  });
+	  return args.conversationId;
+	},
+  });
