@@ -7,26 +7,6 @@ pnpm install
 pnpm run start
 ```
 
-# Building For Production
-
-To build this application for production:
-
-```bash
-pnpm run build
-```
-
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
-pnpm run test
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
 ## Linting & Formatting
 
 This project uses [Biome](https://biomejs.dev/) for linting and formatting. To run both linter & formater just run:
