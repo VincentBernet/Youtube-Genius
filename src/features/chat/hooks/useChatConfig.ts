@@ -1,16 +1,16 @@
 import { useQuery } from "convex/react";
 import { MODELS_AVAILABLE, type ModelAvailable } from "convex/types";
 import { useEffect, useState } from "react";
-import { DEFAULT_CHAT_CONFIG } from "@/features/chat/config";
+import { PROMPT_MODES } from "@/features/chat/config";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
 export const useChatConfig = (conversationId: Id<"conversations"> | null) => {
 	const [selectedModel, setSelectedModel] = useState<ModelAvailable>(
-		DEFAULT_CHAT_CONFIG.model,
+		PROMPT_MODES[0].model,
 	);
 	const [systemPrompt, setSystemPrompt] = useState<string>(
-		DEFAULT_CHAT_CONFIG.systemPrompt,
+		PROMPT_MODES[0].systemPrompt,
 	);
 
 	// Fetch conversation to get its saved config
@@ -38,8 +38,8 @@ export const useChatConfig = (conversationId: Id<"conversations"> | null) => {
 
 	// Reset to defaults when starting a new conversation
 	const resetToDefaults = () => {
-		setSelectedModel(DEFAULT_CHAT_CONFIG.model);
-		setSystemPrompt(DEFAULT_CHAT_CONFIG.systemPrompt);
+		setSelectedModel(PROMPT_MODES[0].model);
+		setSystemPrompt(PROMPT_MODES[0].systemPrompt);
 	};
 
 	return {

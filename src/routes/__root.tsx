@@ -53,7 +53,7 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "Noto",
+				title: "YoutubeGenius",
 			},
 		],
 		links: [

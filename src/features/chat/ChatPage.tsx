@@ -1,11 +1,11 @@
 import { useChat } from "@ai-sdk/react";
 import { useMutation, useQuery } from "convex/react";
-import { Textarea } from "flowbite-react";
-import { ArrowUp } from "lucide-react";
+import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import ConversationsSidebar from "@/commons/components/ConversationsSidebar";
-import LLMInteraction from "@/commons/components/LLMInteraction";
-import UserInteraction from "@/commons/components/UserInteraction";
+import ChatArea from "@/features/chat/components/ChatArea";
+import YoutubeSetup from "@/features/chat/components/YoutubeSetup";
+import { PROMPT_MODES, type PromptModeValue } from "@/features/chat/config";
 import { useChatConfig } from "@/features/chat/hooks/useChatConfig";
 import { convertToUIMessages } from "@/features/chat/utils";
 import { api } from "../../../convex/_generated/api";
@@ -17,9 +17,19 @@ const ChatPage = () => {
 		useState<Id<"conversations"> | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	// YouTube setup state
+	const [youtubeUrl, setYoutubeUrl] = useState("");
+	const [selectedMode, setSelectedMode] = useState<PromptModeValue>("summary");
+	const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
+
 	// Chat configuration (model, systemPrompt)
-	const { selectedModel, systemPrompt, resetToDefaults } =
-		useChatConfig(conversationId);
+	const {
+		selectedModel,
+		setSystemPrompt,
+		setSelectedModel,
+		systemPrompt,
+		resetToDefaults,
+	} = useChatConfig(conversationId);
 
 	// Fetch user's conversations
 	const conversations = useQuery(api.conversations.queries.getConversations);
@@ -44,12 +54,6 @@ const ChatPage = () => {
 			setMessages(convertToUIMessages(dbMessages));
 		}
 	}, [dbMessages, setMessages]);
-
-	// Calculate rows based on content
-	const getRows = () => {
-		const lineBreaks = (input.match(/\n/g) || []).length;
-		return Math.min(Math.max(1, lineBreaks + 1), 6); // Min 1, max 6 rows
-	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -107,6 +111,8 @@ const ChatPage = () => {
 
 	const handleSelectConversation = (id: Id<"conversations">) => {
 		setConversationId(id);
+		// Skip setup screen for existing conversations
+		setHasSetupCompleted(true);
 		// Messages will be loaded automatically via the useEffect when dbMessages updates
 	};
 
@@ -114,11 +120,30 @@ const ChatPage = () => {
 		setConversationId(null);
 		setMessages([]);
 		resetToDefaults();
+		// Reset setup state
+		setYoutubeUrl("");
+		setSelectedMode("summary");
+		setHasSetupCompleted(false);
+	};
+
+	const handleSetupSubmit = () => {
+		if (!youtubeUrl.trim()) return;
+		setHasSetupCompleted(true);
+	};
+
+	const handleSelectMode = (mode: PromptModeValue) => {
+		setSelectedMode(mode);
+		setSystemPrompt(
+			PROMPT_MODES.find((m) => m.id === mode)?.systemPrompt || "",
+		);
+		setSelectedModel(
+			PROMPT_MODES.find((m) => m.id === mode)?.model ||
+				"google/gemini-2.0-flash",
+		);
 	};
 
 	return (
 		<div className="flex h-full">
-			{/* Sidebar */}
 			<ConversationsSidebar
 				conversations={conversations}
 				selectedId={conversationId}
@@ -126,53 +151,29 @@ const ChatPage = () => {
 				onNewConversation={handleNewConversation}
 			/>
 
-			{/* Main chat area */}
 			<main className="flex-1 flex flex-col min-h-0">
-				<section className="flex-1 flex flex-col pt-8 pb-4 px-4 max-w-4xl mx-auto w-full min-h-0">
-					<div className="flex flex-col gap-8 flex-1 overflow-y-auto">
-						{messages.length === 0 ? (
-							<div className="flex-1 flex items-center justify-center">
-								<div className="text-center text-slate-400">
-									<p className="text-lg">Start a new conversation</p>
-									<p className="text-sm mt-1">
-										Ask anything and I'll help you learn
-									</p>
-								</div>
-							</div>
-						) : (
-							messages.map((message) => (
-								<div key={message.id}>
-									{message.role === "user" ? (
-										<UserInteraction parts={message.parts} />
-									) : (
-										<LLMInteraction parts={message.parts} />
-									)}
-								</div>
-							))
-						)}
-					</div>
-
-					<div className="sticky bottom-8 left-0 right-0 pt-4">
-						<form onSubmit={handleSubmit} className="relative">
-							<Textarea
-								className="!bg-slate-800 !border-slate-600 !text-white placeholder:text-slate-400 focus:!border-cyan-500 focus:!ring-cyan-500 !pr-14 !p-5 resize-none !rounded-full"
-								rows={getRows()}
-								placeholder="Ask a question to Noto"
-								onChange={(e) => setInput(e.target.value)}
-								onKeyDown={handleKeyDown}
-								value={input}
-								disabled={isSubmitting}
-							/>
-							<button
-								type="submit"
-								disabled={isSubmitting || !input.trim()}
-								className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white text-slate-800 rounded-full hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-							>
-								<ArrowUp size={20} />
-							</button>
-						</form>
-					</div>
-				</section>
+				<AnimatePresence mode="wait">
+					{!hasSetupCompleted ? (
+						<YoutubeSetup
+							key="youtube-setup"
+							youtubeUrl={youtubeUrl}
+							selectedMode={selectedMode}
+							onUrlChange={setYoutubeUrl}
+							onModeChange={handleSelectMode}
+							onSubmit={handleSetupSubmit}
+						/>
+					) : (
+						<ChatArea
+							key="chat-area"
+							messages={messages}
+							input={input}
+							isSubmitting={isSubmitting}
+							onInputChange={setInput}
+							onSubmit={handleSubmit}
+							onKeyDown={handleKeyDown}
+						/>
+					)}
+				</AnimatePresence>
 			</main>
 		</div>
 	);
