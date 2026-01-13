@@ -82,7 +82,7 @@ const ChatArea = ({
 			<div className="sticky bottom-8 left-0 right-0 pt-4">
 				<form onSubmit={onSubmit} className="relative">
 					<Textarea
-						className="!bg-slate-800 !border-slate-600 !text-white placeholder:text-slate-400 focus:!border-cyan-500 focus:!ring-cyan-500 !pr-14 !p-5 resize-none !rounded-full"
+						className={`!bg-slate-800 !border-slate-600 !text-white placeholder:text-slate-400 focus:!border-cyan-500 focus:!ring-cyan-500 !pr-14 !p-5 resize-none ${getRows(input) === 1 ? "rounded-full" : "squircle rounded-[28px]"}`}
 						rows={getRows(input)}
 						placeholder="Ask a question to YoutubeGenius"
 						onChange={(e) => onInputChange(e.target.value)}

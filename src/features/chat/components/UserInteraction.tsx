@@ -8,7 +8,8 @@ type Props = {
 const UserInteraction = ({ parts }: Props) => {
 	return (
 		<div className="flex items-center justify-end">
-			<p className="bg-gray-700 rounded-full px-4 py-2">
+			<p className="bg-gray-700 px-4 py-2 squircle max-w-[70%]">
+				{" "}
 				{parts.map((part) => {
 					switch (part.type) {
 						case "text":

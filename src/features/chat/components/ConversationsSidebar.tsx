@@ -1,5 +1,6 @@
 import type { PromptModeValue } from "convex/types";
 import { Plus } from "lucide-react";
+import AnimatedTitle from "@/features/chat/components/AnimatedTitle";
 import { MODE_ICONS } from "@/features/chat/config";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -67,7 +68,7 @@ const ConversationsSidebar = ({
 									<Icon className={`w-5 h-5 mt-1 text-slate-400`} />
 									<div className="flex-1 min-w-0">
 										<p className="text-sm font-medium truncate">
-											{conversation.title || "New conversation"}
+											<AnimatedTitle text={conversation.title || "New chat"} />
 										</p>
 										<p className="text-xs text-slate-500 mt-0.5">
 											{formatRelativeTime(conversation.updatedAt)}

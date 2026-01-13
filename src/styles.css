@@ -15,3 +15,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.squircle {
+  border-radius: 18px;
+  corner-shape: superellipse(1.1);
+}
