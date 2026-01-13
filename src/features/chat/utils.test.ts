@@ -1,6 +1,6 @@
 import type { Doc, Id } from "convex/_generated/dataModel";
 import { describe, expect, it } from "vitest";
-import { convertToUIMessages, extractVideoId } from "./utils";
+import { convertToUIMessages, extractVideoId, getRows } from "./utils";
 
 const createMockMessage = (
 	overrides: Partial<Doc<"messages">> & {
@@ -173,5 +173,39 @@ describe("extractVideoId", () => {
 	it("should return 8ZoQ7wh9pSQ", () => {
 		const url = "https://www.youtube.com/watch/8ZoQ7wh9pSQ";
 		expect(extractVideoId(url)).toBe("8ZoQ7wh9pSQ");
+	});
+});
+
+describe("getRows", () => {
+	it("should return 1 for empty string", () => {
+		expect(getRows("")).toBe(1);
+	});
+
+	it("should return 1 for single line text", () => {
+		expect(getRows("Hello, world!")).toBe(1);
+	});
+
+	it("should return 2 for text with 1 line break", () => {
+		expect(getRows("Hello\nworld")).toBe(2);
+	});
+
+	it("should return 3 for text with 2 line breaks", () => {
+		expect(getRows("Line 1\nLine 2\nLine 3")).toBe(3);
+	});
+
+	it("should return 6 for text with 5 line breaks (maximum)", () => {
+		expect(getRows("1\n2\n3\n4\n5\n6")).toBe(6);
+	});
+
+	it("should cap at 6 for text with more than 5 line breaks", () => {
+		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10")).toBe(6);
+	});
+
+	it("should count only line breaks for input with only newlines", () => {
+		expect(getRows("\n\n\n")).toBe(4);
+	});
+
+	it("should handle Windows-style line endings (counts only \\n)", () => {
+		expect(getRows("Hello\r\nworld")).toBe(2);
 	});
 });

@@ -1,7 +1,7 @@
 import type { PromptModeValue } from "convex/types";
 import { Plus } from "lucide-react";
 import { MODE_ICONS } from "@/features/chat/config";
-import type { Id } from "../../../convex/_generated/dataModel";
+import type { Id } from "../../../../convex/_generated/dataModel";
 
 type Conversation = {
 	_id: Id<"conversations">;

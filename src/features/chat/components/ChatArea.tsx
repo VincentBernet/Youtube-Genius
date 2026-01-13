@@ -3,8 +3,8 @@ import { Textarea } from "flowbite-react";
 import { ArrowUp } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
-import LLMInteraction from "@/commons/components/LLMInteraction";
-import UserInteraction from "@/commons/components/UserInteraction";
+import LLMInteraction from "@/features/chat/components/LLMInteraction";
+import UserInteraction from "@/features/chat/components/UserInteraction";
 import { getRows } from "@/features/chat/utils";
 
 type Props = {

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { UIMessage } from "ai";
 import { convertToModelMessages, generateText, streamText } from "ai";
 import type { Id } from "../../../convex/_generated/dataModel";
-import type { ModelAvailable, PromptModeValue } from "../../../convex/types";
+import type { ModelAvailable } from "../../../convex/types";
 
 export const Route = createFileRoute("/api/chat")({
 	server: {
@@ -12,14 +12,12 @@ export const Route = createFileRoute("/api/chat")({
 					messages,
 					model,
 					systemPrompt,
-					mode,
 					conversationId,
 					isFirstMessage, // ← Add this flag from frontend
 				}: {
 					messages: UIMessage[];
 					model: ModelAvailable;
 					systemPrompt: string;
-					mode: PromptModeValue;
 					conversationId?: Id<"conversations">;
 					isFirstMessage?: boolean;
 				} = await request.json();
