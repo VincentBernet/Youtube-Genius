@@ -1,9 +1,12 @@
-import { MessageSquare, Plus } from "lucide-react";
+import type { PromptModeValue } from "convex/types";
+import { Plus } from "lucide-react";
+import { MODE_ICONS } from "@/features/chat/config";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type Conversation = {
 	_id: Id<"conversations">;
 	title?: string;
+	mode: PromptModeValue;
 	updatedAt: number;
 	createdAt: number;
 };
@@ -48,31 +51,31 @@ const ConversationsSidebar = ({
 					</div>
 				) : (
 					<div className="space-y-1">
-						{conversations.map((conversation) => (
-							<button
-								key={conversation._id}
-								type="button"
-								onClick={() => onSelectConversation(conversation._id)}
-								className={`w-full flex items-start gap-3 px-3 py-3 rounded-lg transition-colors cursor-pointer text-left group ${
-									selectedId === conversation._id
-										? "bg-slate-700 text-white"
-										: "text-slate-300 hover:bg-slate-700/50 hover:text-white"
-								}`}
-							>
-								<MessageSquare
-									size={18}
-									className="mt-0.5 flex-shrink-0 text-slate-400 group-hover:text-slate-300"
-								/>
-								<div className="flex-1 min-w-0">
-									<p className="text-sm font-medium truncate">
-										{conversation.title || "New conversation"}
-									</p>
-									<p className="text-xs text-slate-500 mt-0.5">
-										{formatRelativeTime(conversation.updatedAt)}
-									</p>
-								</div>
-							</button>
-						))}
+						{conversations.map((conversation) => {
+							const Icon = MODE_ICONS[conversation.mode];
+							return (
+								<button
+									key={conversation._id}
+									type="button"
+									onClick={() => onSelectConversation(conversation._id)}
+									className={`w-full flex items-start gap-3 px-3 py-3 rounded-lg transition-colors cursor-pointer text-left group ${
+										selectedId === conversation._id
+											? "bg-slate-700 text-white"
+											: "text-slate-300 hover:bg-slate-700/50 hover:text-white"
+									}`}
+								>
+									<Icon className={`w-5 h-5 mt-1 text-slate-400`} />
+									<div className="flex-1 min-w-0">
+										<p className="text-sm font-medium truncate">
+											{conversation.title || "New conversation"}
+										</p>
+										<p className="text-xs text-slate-500 mt-0.5">
+											{formatRelativeTime(conversation.updatedAt)}
+										</p>
+									</div>
+								</button>
+							);
+						})}
 					</div>
 				)}
 			</div>

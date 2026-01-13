@@ -1,6 +1,5 @@
-import type { ModelAvailable } from "convex/types";
-
-export type PromptModeValue = "summary" | "quiz" | "explain" | "key-points";
+import type { ModelAvailable, PromptModeValue } from "convex/types";
+import { BookOpen, FileText, HelpCircle, Lightbulb } from "lucide-react";
 
 export type PromptMode = {
 	id: PromptModeValue;
@@ -49,3 +48,10 @@ export const PROMPT_MODES = [
 		firstMessage: "Extract the key takeaways from the video",
 	},
 ] as const satisfies PromptMode[];
+
+export const MODE_ICONS = {
+	summary: FileText,
+	quiz: HelpCircle,
+	explain: BookOpen,
+	"key-points": Lightbulb,
+} as const;

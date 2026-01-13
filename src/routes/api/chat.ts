@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { UIMessage } from "ai";
 import { convertToModelMessages, generateText, streamText } from "ai";
 import type { Id } from "../../../convex/_generated/dataModel";
-import type { ModelAvailable } from "../../../convex/types";
+import type { ModelAvailable, PromptModeValue } from "../../../convex/types";
 
 export const Route = createFileRoute("/api/chat")({
 	server: {
@@ -12,12 +12,14 @@ export const Route = createFileRoute("/api/chat")({
 					messages,
 					model,
 					systemPrompt,
+					mode,
 					conversationId,
 					isFirstMessage, // ← Add this flag from frontend
 				}: {
 					messages: UIMessage[];
 					model: ModelAvailable;
 					systemPrompt: string;
+					mode: PromptModeValue;
 					conversationId?: Id<"conversations">;
 					isFirstMessage?: boolean;
 				} = await request.json();
@@ -67,8 +69,7 @@ export const Route = createFileRoute("/api/chat")({
 									const userMessage = messages.find((m) => m.role === "user");
 									const titleResult = await generateText({
 										model: "google/gemini-2.0-flash", // Use fast model for titles
-										system:
-											"Generate a short, descriptive title (max 50 chars) for this conversation. Return only the title, no quotes or punctuation.",
+										system: `Generate a short, descriptive title (max 30 chars) for this conversation. Return only the title, no quotes or punctuation.`,
 										prompt: `User: ${userMessage?.parts[0].type === "text" ? userMessage.parts[0].text : ""}\nAssistant: ${text.slice(0, 500)}`,
 									});
 

@@ -1,6 +1,6 @@
 import type { Doc, Id } from "convex/_generated/dataModel";
 import { describe, expect, it } from "vitest";
-import { convertToUIMessages } from "./utils";
+import { convertToUIMessages, extractVideoId } from "./utils";
 
 const createMockMessage = (
 	overrides: Partial<Doc<"messages">> & {
@@ -107,5 +107,71 @@ describe("convertToUIMessages", () => {
 			type: "text",
 			text: "Here is some **markdown** content",
 		});
+	});
+});
+
+describe("extractVideoId", () => {
+	it("should extract video ID from standard watch URL", () => {
+		const url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from watch URL with additional parameters", () => {
+		const url =
+			"https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=120s&list=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from short youtu.be URL", () => {
+		const url = "https://youtu.be/dQw4w9WgXcQ";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from youtu.be URL with timestamp", () => {
+		const url = "https://youtu.be/dQw4w9WgXcQ?t=42";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from embed URL", () => {
+		const url = "https://www.youtube.com/embed/dQw4w9WgXcQ";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from shorts URL", () => {
+		const url = "https://www.youtube.com/shorts/abc123XYZ";
+		expect(extractVideoId(url)).toBe("abc123XYZ");
+	});
+
+	it("should extract video ID from URL without www", () => {
+		const url = "https://youtube.com/watch?v=dQw4w9WgXcQ";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should extract video ID from URL without https", () => {
+		const url = "youtube.com/watch?v=dQw4w9WgXcQ";
+		expect(extractVideoId(url)).toBe("dQw4w9WgXcQ");
+	});
+
+	it("should return null for invalid YouTube URL", () => {
+		const url = "https://vimeo.com/123456789";
+		expect(extractVideoId(url)).toBeNull();
+	});
+
+	it("should return null for empty string", () => {
+		expect(extractVideoId("")).toBeNull();
+	});
+
+	it("should return null for random string", () => {
+		expect(extractVideoId("not a url at all")).toBeNull();
+	});
+
+	it("should return null for YouTube URL without video ID", () => {
+		const url = "https://www.youtube.com/";
+		expect(extractVideoId(url)).toBeNull();
+	});
+
+	it("should return 8ZoQ7wh9pSQ", () => {
+		const url = "https://www.youtube.com/watch/8ZoQ7wh9pSQ";
+		expect(extractVideoId(url)).toBe("8ZoQ7wh9pSQ");
 	});
 });

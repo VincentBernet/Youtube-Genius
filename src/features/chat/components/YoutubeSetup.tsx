@@ -1,14 +1,8 @@
+import type { PromptModeValue } from "convex/types";
 import { TextInput } from "flowbite-react";
-import {
-	BookOpen,
-	FileText,
-	HelpCircle,
-	Lightbulb,
-	Youtube,
-} from "lucide-react";
+import { Youtube } from "lucide-react";
 import { motion } from "motion/react";
-import type { PromptModeValue } from "@/features/chat/config";
-import { PROMPT_MODES } from "@/features/chat/config";
+import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
 
 type Props = {
 	youtubeUrl: string;
@@ -16,14 +10,9 @@ type Props = {
 	onUrlChange: (url: string) => void;
 	onModeChange: (mode: PromptModeValue) => void;
 	onSubmit: () => void;
+	isLoading: boolean;
+	isError: boolean;
 };
-
-const MODE_ICONS = {
-	summary: FileText,
-	quiz: HelpCircle,
-	explain: BookOpen,
-	"key-points": Lightbulb,
-} as const;
 
 const YoutubeSetup = ({
 	youtubeUrl,
@@ -31,6 +20,8 @@ const YoutubeSetup = ({
 	onUrlChange,
 	onModeChange,
 	onSubmit,
+	isLoading,
+	isError,
 }: Props) => {
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter" && youtubeUrl.trim()) {
@@ -115,13 +106,25 @@ const YoutubeSetup = ({
 					})}
 				</div>
 
+				{isError && (
+					<p className="text-center text-sm text-red-500">
+						Error fetching transcript. Please try again.
+					</p>
+				)}
+
 				{/* Hint */}
 				<p className="text-center text-sm text-slate-500">
-					Press{" "}
-					<kbd className="px-2 py-1 bg-slate-700 rounded text-slate-300">
-						Enter
-					</kbd>{" "}
-					to continue
+					{isLoading ? (
+						<span className="text-cyan-400">Fetching transcript...</span>
+					) : (
+						<>
+							Press{" "}
+							<kbd className="px-2 py-1 bg-slate-700 rounded text-slate-300">
+								Enter
+							</kbd>{" "}
+							to continue
+						</>
+					)}
 				</p>
 			</div>
 		</motion.div>

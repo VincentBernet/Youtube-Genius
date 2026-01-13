@@ -1,7 +1,7 @@
 // convex/schema.ts
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-import { messageRoleValidator, modelValidator } from "./types";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
+import { messageRoleValidator, modelValidator, promptModeValidator } from './types';
 
 export default defineSchema({
   users: defineTable({
@@ -9,21 +9,32 @@ export default defineSchema({
     name: v.optional(v.string()),
     email: v.optional(v.string()),
     pictureUrl: v.optional(v.string()),
-  }).index("by_token", ["tokenIdentifier"]),
+  }).index('by_token', ['tokenIdentifier']),
+
+  youtubeVideos: defineTable({
+    videoId: v.string(),
+    url: v.string(),
+    title: v.optional(v.string()),
+    transcript: v.string(),
+    transcriptRaw: v.string(),
+    createdAt: v.number(),
+  }).index('by_video_id', ['videoId']),
 
   conversations: defineTable({
-    userId: v.id("users"),
+    userId: v.id('users'),
     title: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-    model: v.optional(modelValidator),
-    systemPrompt: v.optional(v.string()),
+    mode: promptModeValidator,
+    model: modelValidator,
+    systemPrompt: v.string(),
+    youtubeVideoId: v.id('youtubeVideos'),
   })
-    .index("by_user", ["userId"])
-    .index("by_user_updated", ["userId", "updatedAt"]),
+    .index('by_user', ['userId'])
+    .index('by_user_updated', ['userId', 'updatedAt']),
 
   messages: defineTable({
-    conversationId: v.id("conversations"),
+    conversationId: v.id('conversations'),
     role: messageRoleValidator,
     content: v.string(),
     createdAt: v.number(),
@@ -42,11 +53,11 @@ export default defineSchema({
     attachments: v.optional(v.array(v.object({
       type: v.string(),
       url: v.optional(v.string()),
-      storageId: v.optional(v.id("_storage")),
+      storageId: v.optional(v.id('_storage')),
       mimeType: v.optional(v.string()),
       name: v.optional(v.string()),
     }))),
   })
-    .index("by_conversation", ["conversationId", "createdAt"])
-    .index("by_conversation_recent", ["conversationId"]),
+    .index('by_conversation', ['conversationId', 'createdAt'])
+    .index('by_conversation_recent', ['conversationId']),
 });

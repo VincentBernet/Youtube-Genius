@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoggedOutRouteImport } from './routes/loggedOut'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiTranscriptRouteImport } from './routes/api/transcript'
+import { Route as ApiCheckRouteImport } from './routes/api/check'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedChatRouteImport } from './routes/_authenticated/chat'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -28,6 +30,16 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTranscriptRoute = ApiTranscriptRouteImport.update({
+  id: '/api/transcript',
+  path: '/api/transcript',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckRoute = ApiCheckRouteImport.update({
+  id: '/api/check',
+  path: '/api/check',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -52,6 +64,8 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/check': typeof ApiCheckRoute
+  '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +73,8 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/check': typeof ApiCheckRoute
+  '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +84,28 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/check': typeof ApiCheckRoute
+  '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/loggedOut' | '/account' | '/chat' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/loggedOut'
+    | '/account'
+    | '/chat'
+    | '/api/chat'
+    | '/api/check'
+    | '/api/transcript'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/loggedOut' | '/account' | '/chat' | '/api/chat'
+  to:
+    | '/'
+    | '/loggedOut'
+    | '/account'
+    | '/chat'
+    | '/api/chat'
+    | '/api/check'
+    | '/api/transcript'
   id:
     | '__root__'
     | '/'
@@ -82,6 +114,8 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/_authenticated/chat'
     | '/api/chat'
+    | '/api/check'
+    | '/api/transcript'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -89,6 +123,8 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoggedOutRoute: typeof LoggedOutRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiCheckRoute: typeof ApiCheckRoute
+  ApiTranscriptRoute: typeof ApiTranscriptRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -112,6 +148,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/transcript': {
+      id: '/api/transcript'
+      path: '/api/transcript'
+      fullPath: '/api/transcript'
+      preLoaderRoute: typeof ApiTranscriptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/check': {
+      id: '/api/check'
+      path: '/api/check'
+      fullPath: '/api/check'
+      preLoaderRoute: typeof ApiCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -157,6 +207,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoggedOutRoute: LoggedOutRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiCheckRoute: ApiCheckRoute,
+  ApiTranscriptRoute: ApiTranscriptRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
