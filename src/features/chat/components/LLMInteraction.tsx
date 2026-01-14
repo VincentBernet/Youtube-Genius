@@ -1,7 +1,7 @@
 import type { UIDataTypes, UIMessagePart, UITools } from "ai";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import oneDark from "react-syntax-highlighter/dist/esm/styles/prism/one-dark";
 
 type Props = {
 	parts: UIMessagePart<UIDataTypes, UITools>[];
