@@ -106,12 +106,40 @@ const ChatPage = () => {
 				isFromCache: false,
 			};
 		},
-		onSuccess: (data) => {
-			const modePrompt =
-				PROMPT_MODES.find((m) => m.id === selectedMode)?.systemPrompt || "";
-			setSystemPrompt(
-				`${modePrompt}\n\n---\nVideo Transcript:\n${data.transcript}`,
+		onSuccess: async (data) => {
+			const selectedModeConfig = PROMPT_MODES.find(
+				(m) => m.id === selectedMode,
 			);
+			const modePrompt = selectedModeConfig?.systemPrompt || "";
+			const firstMessage =
+				selectedModeConfig?.firstMessage || "Summarize the video";
+
+			const fullSystemPrompt = `${modePrompt}\n\n---\nVideo Transcript:\n${data.transcript}`;
+			setSystemPrompt(fullSystemPrompt);
+
+			// Create conversation in DB
+			const newConversationId = await createWithFirstMessage({
+				content: firstMessage,
+				title: "New chat",
+				systemPrompt: fullSystemPrompt,
+				mode: selectedMode,
+				model: selectedModel,
+				youtubeVideoId: data.youtubeVideoId,
+			});
+			setConversationId(newConversationId);
+			// Send to LLM
+			sendMessage(
+				{ text: firstMessage },
+				{
+					body: {
+						conversationId: newConversationId,
+						model: selectedModel,
+						systemPrompt: fullSystemPrompt,
+						isFirstMessage: true,
+					},
+				},
+			);
+
 			setYoutubeVideoId(data.youtubeVideoId);
 			setHasSetupCompleted(true);
 		},
@@ -234,7 +262,7 @@ const ChatPage = () => {
 				onNewConversation={handleNewConversation}
 			/>
 
-			<main className="flex-1 flex flex-col min-h-0">
+			<main className="flex-1 flex flex-col min-h-0 overflow-y-auto">
 				<AnimatePresence mode="wait">
 					{!hasSetupCompleted ? (
 						<YoutubeSetup

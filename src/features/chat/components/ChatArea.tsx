@@ -60,7 +60,7 @@ const ChatArea = ({
 			transition={{ duration: 0.1 }}
 			className="flex-1 flex flex-col pt-8 pb-4 px-4 max-w-4xl mx-auto w-full min-h-0"
 		>
-			<div className="flex flex-col gap-8 flex-1 overflow-y-auto">
+			<div className="flex flex-col gap-8 flex-1">
 				{messages.map((message, index) => (
 					<div
 						key={message.id}
