@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Outlet } from "@tanstack/react-router";
-import { useConvexAuth, useMutation } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { useEffect, useRef } from "react";
 import Loading from "@/commons/components/Loading";
 import { api } from "../../../convex/_generated/api";
@@ -9,6 +9,7 @@ const AuthPage = () => {
 	const { isLoading, isAuthenticated } = useConvexAuth();
 	const { loginWithRedirect } = useAuth0();
 	const storeUser = useMutation(api.users.mutations.store);
+	const currentUser = useQuery(api.users.mutations.current);
 	const hasStoredUser = useRef(false);
 
 	useEffect(() => {
@@ -39,6 +40,16 @@ const AuthPage = () => {
 
 	if (!isAuthenticated) {
 		return null; // Will redirect via useEffect
+	}
+
+	// Wait for user to be stored in database before rendering children
+	// This prevents race conditions where queries run before user exists
+	if (currentUser === undefined) {
+		return (
+			<div className="flex items-center justify-center h-screen ">
+				<Loading />
+			</div>
+		);
 	}
 
 	return <Outlet />;

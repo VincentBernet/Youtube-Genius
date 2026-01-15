@@ -1,5 +1,7 @@
 # Getting Started
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/87ee5bb1-e661-4f79-b11c-ab5b0c702b1f/deploy-status)](https://app.netlify.com/projects/youtube-genius/deploys)
+
 To run this application:
 
 ```bash
