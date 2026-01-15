@@ -81,7 +81,8 @@ export const getConversations = query({
 			.unique();
 
 		if (!user) {
-			throw new Error("User not found");
+			console.error("User not found");
+			return [];
 		}
 
 		// Get all conversations for this user, sorted by most recent first
