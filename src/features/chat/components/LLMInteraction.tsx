@@ -1,8 +1,5 @@
 import type { UIDataTypes, UIMessagePart, UITools } from "ai";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
-//import oneDark from "react-syntax-highlighter/dist/esm/styles/prism/one-dark";
 
 type Props = {
 	parts: UIMessagePart<UIDataTypes, UITools>[];
@@ -69,19 +66,6 @@ const LLMInteraction = ({ parts }: Props) => {
 										},
 										hr() {
 											return <hr className="border-white-500/50 my-5" />;
-										},
-										code({ className, children, ...props }) {
-											const match = /language-(\w+)/.exec(className || "");
-											const isInline = !match;
-											return !isInline ? (
-												<SyntaxHighlighter language={match[1]} PreTag="div">
-													{String(children).replace(/\n$/, "")}
-												</SyntaxHighlighter>
-											) : (
-												<code className={className} {...props}>
-													{children}
-												</code>
-											);
 										},
 									}}
 								>
