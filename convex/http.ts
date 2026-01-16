@@ -3,6 +3,7 @@ import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { httpAction } from "./_generated/server";
 import { ModelAvailable } from "./types";
+import { api } from "./_generated/api";
 
 const http = httpRouter();
 
@@ -93,6 +94,40 @@ http.route({
 	  }
 	}),
   });
+
+// HTTP action to check if a video exists in the database
+http.route({
+	path: "/checkIfVideoExists",
+	method: "GET",
+	handler: httpAction(async (ctx, request) => {
+		const url = new URL(request.url);
+		const videoId = url.searchParams.get("videoId");
+
+		if (!videoId) {
+			return new Response(
+				JSON.stringify({ error: "videoId parameter is required" }),
+				{ status: 400, headers: { "Content-Type": "application/json" } }
+			);
+		}
+
+		try {
+			const video = await ctx.runQuery(api.youtube.queries.getByVideoId, {
+				videoId,
+			});
+
+			return new Response(
+				JSON.stringify(video),
+				{ status: 200, headers: { "Content-Type": "application/json" } }
+			);
+		} catch (error) {
+			console.error("Failed to check video:", error);
+			return new Response(
+				JSON.stringify({ error: "Failed to check video in database" }),
+				{ status: 500, headers: { "Content-Type": "application/json" } }
+			);
+		}
+	}),
+});
 
 export default http;
 

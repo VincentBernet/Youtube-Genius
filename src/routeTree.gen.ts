@@ -13,7 +13,7 @@ import { Route as LoggedOutRouteImport } from './routes/loggedOut'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTranscriptRouteImport } from './routes/api/transcript'
-import { Route as ApiCheckRouteImport } from './routes/api/check'
+import { Route as ApiCheckIfVideoExistsRouteImport } from './routes/api/checkIfVideoExists'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedChatRouteImport } from './routes/_authenticated/chat'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -37,9 +37,9 @@ const ApiTranscriptRoute = ApiTranscriptRouteImport.update({
   path: '/api/transcript',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCheckRoute = ApiCheckRouteImport.update({
-  id: '/api/check',
-  path: '/api/check',
+const ApiCheckIfVideoExistsRoute = ApiCheckIfVideoExistsRouteImport.update({
+  id: '/api/checkIfVideoExists',
+  path: '/api/checkIfVideoExists',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -64,7 +64,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
-  '/api/check': typeof ApiCheckRoute
+  '/api/checkIfVideoExists': typeof ApiCheckIfVideoExistsRoute
   '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRoutesByTo {
@@ -73,7 +73,7 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
-  '/api/check': typeof ApiCheckRoute
+  '/api/checkIfVideoExists': typeof ApiCheckIfVideoExistsRoute
   '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRoutesById {
@@ -84,7 +84,7 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/chat': typeof AuthenticatedChatRoute
   '/api/chat': typeof ApiChatRoute
-  '/api/check': typeof ApiCheckRoute
+  '/api/checkIfVideoExists': typeof ApiCheckIfVideoExistsRoute
   '/api/transcript': typeof ApiTranscriptRoute
 }
 export interface FileRouteTypes {
@@ -95,7 +95,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/chat'
     | '/api/chat'
-    | '/api/check'
+    | '/api/checkIfVideoExists'
     | '/api/transcript'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,7 +104,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/chat'
     | '/api/chat'
-    | '/api/check'
+    | '/api/checkIfVideoExists'
     | '/api/transcript'
   id:
     | '__root__'
@@ -114,7 +114,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/_authenticated/chat'
     | '/api/chat'
-    | '/api/check'
+    | '/api/checkIfVideoExists'
     | '/api/transcript'
   fileRoutesById: FileRoutesById
 }
@@ -123,7 +123,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoggedOutRoute: typeof LoggedOutRoute
   ApiChatRoute: typeof ApiChatRoute
-  ApiCheckRoute: typeof ApiCheckRoute
+  ApiCheckIfVideoExistsRoute: typeof ApiCheckIfVideoExistsRoute
   ApiTranscriptRoute: typeof ApiTranscriptRoute
 }
 
@@ -157,11 +157,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTranscriptRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/check': {
-      id: '/api/check'
-      path: '/api/check'
-      fullPath: '/api/check'
-      preLoaderRoute: typeof ApiCheckRouteImport
+    '/api/checkIfVideoExists': {
+      id: '/api/checkIfVideoExists'
+      path: '/api/checkIfVideoExists'
+      fullPath: '/api/checkIfVideoExists'
+      preLoaderRoute: typeof ApiCheckIfVideoExistsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -207,7 +207,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoggedOutRoute: LoggedOutRoute,
   ApiChatRoute: ApiChatRoute,
-  ApiCheckRoute: ApiCheckRoute,
+  ApiCheckIfVideoExistsRoute: ApiCheckIfVideoExistsRoute,
   ApiTranscriptRoute: ApiTranscriptRoute,
 }
 export const routeTree = rootRouteImport
