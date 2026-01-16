@@ -48,7 +48,7 @@ export const Route = createFileRoute("/api/checkIfVideoExists")({
 						);
 						return new Response(
 							JSON.stringify({
-								error: `Failed to check video: ${response.statusText}`,
+								error: `Failed to check if video exists: ${response.statusText}`,
 							}),
 							{
 								status: response.status,
@@ -63,13 +63,13 @@ export const Route = createFileRoute("/api/checkIfVideoExists")({
 						headers: { "Content-Type": "application/json" },
 					});
 				} catch (error) {
-					console.error("❌ Failed to check video:", error);
+					console.error("❌ Failed to check if video exists:", error);
 					if (error instanceof Error) {
 						console.error("Error details:", error.message, error.stack);
 					}
 					return new Response(
 						JSON.stringify({
-							error: "Failed to check video in database",
+							error: "Failed to check if video exists in database",
 							details: error instanceof Error ? error.message : "Unknown error",
 						}),
 						{ status: 500, headers: { "Content-Type": "application/json" } },

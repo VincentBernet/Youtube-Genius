@@ -120,9 +120,9 @@ http.route({
 				{ status: 200, headers: { "Content-Type": "application/json" } }
 			);
 		} catch (error) {
-			console.error("Failed to check video:", error);
+			console.error("Failed to check if video exists:", error);
 			return new Response(
-				JSON.stringify({ error: "Failed to check video in database" }),
+				JSON.stringify({ error: "Failed to check if video exists in database" }),
 				{ status: 500, headers: { "Content-Type": "application/json" } }
 			);
 		}

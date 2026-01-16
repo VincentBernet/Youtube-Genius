@@ -59,7 +59,9 @@ const ChatPage = () => {
 			}
 
 			// First, check if video exists in DB
-			const checkResponse = await fetch(`/api/check?videoId=${videoId}`);
+			const checkResponse = await fetch(
+				`/api/checkIfVideoExists?videoId=${videoId}`,
+			);
 			if (checkResponse.ok) {
 				const existingVideo = await checkResponse.json();
 				if (existingVideo) {
