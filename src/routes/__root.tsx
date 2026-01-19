@@ -55,6 +55,52 @@ export const Route = createRootRouteWithContext<{
 			{
 				title: "YoutubeGenius",
 			},
+			// Open Graph / Facebook
+			{
+				property: "og:type",
+				content: "website",
+			},
+			{
+				property: "og:title",
+				content: "YoutubeGenius - Learn from YouTube videos",
+			},
+			{
+				property: "og:description",
+				content: "Transform YouTube videos into interactive learning experiences with AI-powered conversations",
+			},
+			{
+				property: "og:image",
+				content: "https://youtube-genius.netlify.app/yt-genius-logo.png", // Full URL to your OG image
+			},
+			{
+				property: "og:url",
+				content: "https://yourdomain.com", // Your site URL
+			},
+			{
+				property: "og:site_name",
+				content: "YoutubeGenius",
+			},
+			// Twitter Card
+			{
+				name: "twitter:card",
+				content: "summary_large_image",
+			},
+			{
+				name: "twitter:title",
+				content: "YoutubeGenius - Learn from YouTube videos",
+			},
+			{
+				name: "twitter:url",
+				content: "https://youtube-genius.netlify.app",
+			},
+			{
+				name: "twitter:description",
+				content: "Transform YouTube videos into interactive learning experiences with AI-powered conversations",
+			},
+			{
+				name: "twitter:image",
+				content: "https://youtube-genius.netlify.app/yt-genius-logo.png",
+			},
 		],
 		links: [
 			{
