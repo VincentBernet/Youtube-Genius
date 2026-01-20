@@ -24,5 +24,11 @@ jobs:
       - name: 📦 Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🧪 Formatter, Linter, Tsc, Build, Tests & Check Type Exported
+      - name: 🧪 Formatter, Linter, Tsc & Tests
         run: pnpm check
+
+      - name: 📦 Build frontend
+        run: pnpm run build
+
+      - name: 📦 Build backend
+        run: cd convex && npx convex deploy --cmd 'pnpm run build'
