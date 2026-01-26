@@ -2,8 +2,8 @@ import type { PromptModeValue } from "convex/types";
 import { TextInput } from "flowbite-react";
 import { Youtube } from "lucide-react";
 import { motion } from "motion/react";
+import { useKeyboard } from "@/commons/hooks/useKeyboard";
 import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
-import { useEnterKeySubmit } from "@/features/chat/hooks/useEnterKeySubmit";
 
 type Props = {
 	youtubeUrl: string;
@@ -24,17 +24,11 @@ const YoutubeSetup = ({
 	isLoading,
 	isError,
 }: Props) => {
-	useEnterKeySubmit({
-		onSubmit,
+	useKeyboard({
+		key: "Enter",
+		callback: onSubmit,
 		enabled: !!youtubeUrl.trim() && !isLoading,
 	});
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter" && youtubeUrl.trim()) {
-			e.preventDefault();
-			onSubmit();
-		}
-	};
 
 	return (
 		<motion.div
@@ -65,7 +59,13 @@ const YoutubeSetup = ({
 						placeholder="Paste YouTube URL here..."
 						value={youtubeUrl}
 						onChange={(e) => onUrlChange(e.target.value)}
-						onKeyDown={handleKeyDown}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && youtubeUrl.trim() && !isLoading) {
+								e.preventDefault();
+								onSubmit();
+							}
+						}}
+						autoFocus
 						className="[&>input]:!bg-slate-800 [&>input]:!border-slate-600 [&>input]:!text-white [&>input]:placeholder:text-slate-400 [&>input]:focus:!border-cyan-500 [&>input]:focus:!ring-cyan-500 [&>input]:!py-4 [&>input]:!px-5 [&>input]:!rounded-xl"
 						sizing="lg"
 					/>
