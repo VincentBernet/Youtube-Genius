@@ -21,7 +21,7 @@ const ChatPage = () => {
 
 	// YouTube setup state
 	const [youtubeUrl, setYoutubeUrl] = useState("");
-	const [selectedMode, setSelectedMode] = useState<PromptModeValue>("summary");
+	const [selectedMode, setSelectedMode] = useState<PromptModeValue>("interactive");
 	const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
 	const [youtubeVideoId, setYoutubeVideoId] =
 		useState<Id<"youtubeVideos"> | null>(null);

@@ -57,9 +57,7 @@ const AccountPage = () => {
 							Account Information
 						</h2>
 						<div className="space-y-4">
-							<InfoRow label="Full Name" value={user?.name} />
 							<InfoRow label="Nickname" value={user?.nickname} />
-							<InfoRow label="Email" value={user?.email} />
 							<InfoRow
 								label="Last Updated"
 								value={
@@ -86,16 +84,6 @@ const AccountPage = () => {
 								label="Auth Provider"
 								value={user?.sub?.split("|")[0] || "OAuth"}
 							/>
-						</div>
-
-						{/* Theme Toggle Placeholder */}
-						<div className="mt-6 pt-4 border-t border-slate-700/50">
-							<div className="flex items-center justify-between">
-								<span className="text-slate-400 text-sm">Dark Mode</span>
-								<div className="w-12 h-6 bg-cyan-500 rounded-full relative cursor-pointer">
-									<div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
