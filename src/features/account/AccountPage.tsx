@@ -98,7 +98,7 @@ const AccountPage = () => {
 					</p>
 					<button
 						type="button"
-						className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
+						className="cursor-pointer px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
 					>
 						Delete Account
 					</button>
