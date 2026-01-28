@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Globe, Mail, Shield, User } from "lucide-react";
+import DangerZone from "@/features/account/components/DangerZone";
 import InfoRow from "@/features/account/components/InfoRow";
 
 const AccountPage = () => {
@@ -87,22 +88,7 @@ const AccountPage = () => {
 						</div>
 					</div>
 				</div>
-
-				{/* Danger Zone */}
-				<div className="bg-red-950/20 border border-red-500/20 rounded-xl p-6">
-					<h2 className="text-lg font-semibold text-red-400 mb-2">
-						Danger Zone
-					</h2>
-					<p className="text-slate-400 text-sm mb-4">
-						Permanently delete your account and all associated data.
-					</p>
-					<button
-						type="button"
-						className="cursor-pointer px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
-					>
-						Delete Account
-					</button>
-				</div>
+				<DangerZone />
 			</div>
 		</div>
 	);
