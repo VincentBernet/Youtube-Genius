@@ -1,7 +1,7 @@
 // convex/schema.ts
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
-import { messageRoleValidator, modelValidator, promptModeValidator } from './types';
+import { messageRoleValidator, modelValidator, promptModeValidator, userFeedbackSourceValidator } from './types';
 
 export default defineSchema({
   users: defineTable({
@@ -60,4 +60,14 @@ export default defineSchema({
   })
     .index('by_conversation', ['conversationId', 'createdAt'])
     .index('by_conversation_recent', ['conversationId']),
+
+  userFeedback: defineTable({
+    userId: v.id("users"),
+    userEmail: v.optional(v.string()),
+    feedback: v.string(),
+    source: userFeedbackSourceValidator,
+    createdAt: v.number(),
+  })
+    .index("by_source", ["source"])
+    .index("by_user", ["userId"]),
 });

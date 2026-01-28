@@ -9,6 +9,7 @@ const DangerZone = () => {
 	const deleteAccount = useAction(api.users.actions.deleteAccount);
 	const navigate = useNavigate();
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+	const [feedback, setFeedback] = useState("");
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -36,43 +37,62 @@ const DangerZone = () => {
 					Delete Account
 				</button>
 			) : (
-				<div className="flex flex-wrap items-center gap-3">
+				<div className="space-y-4">
 					<p className="text-slate-300 text-sm">
 						Are you sure? This cannot be undone.
 					</p>
-					<button
-						type="button"
-						onClick={() => setIsConfirmOpen(false)}
-						disabled={isDeleting}
-						className="cursor-pointer px-4 py-2 bg-slate-600/50 hover:bg-slate-600 border border-slate-500 text-slate-200 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						Cancel
-					</button>
-					<button
-						type="button"
-						onClick={async () => {
-							setIsDeleting(true);
-							setError(null);
-							try {
-								await deleteAccount();
-								logout({
-									logoutParams: {
-										returnTo: `${window.location.origin}/loggedOut`,
-									},
-								});
-								navigate({ to: "/loggedOut" });
-							} catch (e) {
-								setError(
-									e instanceof Error ? e.message : "Failed to delete account",
-								);
-								setIsDeleting(false);
-							}
-						}}
-						disabled={isDeleting}
-						className="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700 border border-red-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						{isDeleting ? "Deleting…" : "Delete permanently"}
-					</button>
+					<div>
+						<textarea
+							id="deletion-feedback"
+							value={feedback}
+							onChange={(e) => setFeedback(e.target.value)}
+							placeholder="Your feedback helps us improve. Optional but appreciated 🙇"
+							rows={3}
+							maxLength={2000}
+							disabled={isDeleting}
+							className="w-full px-3 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-slate-200 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+						/>
+					</div>
+					<div className="flex flex-wrap items-center gap-3">
+						<button
+							type="button"
+							onClick={() => {
+								setIsConfirmOpen(false);
+								setFeedback("");
+							}}
+							disabled={isDeleting}
+							className="cursor-pointer px-4 py-2 bg-slate-600/50 hover:bg-slate-600 border border-slate-500 text-slate-200 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							onClick={async () => {
+								setIsDeleting(true);
+								setError(null);
+								try {
+									await deleteAccount({
+										feedback: feedback.trim() || undefined,
+									});
+									logout({
+										logoutParams: {
+											returnTo: `${window.location.origin}/loggedOut`,
+										},
+									});
+									navigate({ to: "/loggedOut" });
+								} catch (e) {
+									setError(
+										e instanceof Error ? e.message : "Failed to delete account",
+									);
+									setIsDeleting(false);
+								}
+							}}
+							disabled={isDeleting}
+							className="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700 border border-red-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							{isDeleting ? "Deleting…" : "Delete permanently"}
+						</button>
+					</div>
 				</div>
 			)}
 		</div>

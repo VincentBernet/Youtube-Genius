@@ -1,5 +1,6 @@
 import { internalMutation, mutation, query } from "../_generated/server";
 import { v } from "convex/values";
+import { userFeedbackSourceValidator } from "../types";
 
 export const store = mutation({
 	args: {},
@@ -76,6 +77,24 @@ export const currentUserAndAuth0Id = query({
 
 		if (!user) return null;
 		return { user, auth0UserId: identity.subject };
+	},
+});
+
+export const storeUserFeedbackInternal = internalMutation({
+	args: {
+		userId: v.id("users"),
+		userEmail: v.optional(v.string()),
+		feedback: v.string(),
+		source: userFeedbackSourceValidator,
+	},
+	handler: async (ctx, args) => {
+		await ctx.db.insert("userFeedback", {
+			userId: args.userId,
+			userEmail: args.userEmail,
+			feedback: args.feedback,
+			source: args.source,
+			createdAt: Date.now(),
+		});
 	},
 });
 

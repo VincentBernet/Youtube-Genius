@@ -1,15 +1,28 @@
 import { action } from "../_generated/server";
 import { api, internal } from "../_generated/api";
+import { v } from "convex/values";
 
 export const deleteAccount = action({
-	args: {},
-	handler: async (ctx): Promise<void> => {
+	args: {
+		feedback: v.optional(v.string()),
+	},
+	handler: async (ctx, args): Promise<void> => {
 		const data = await ctx.runQuery(api.users.mutations.currentUserAndAuth0Id);
 		if (!data) {
 			throw new Error("Not authenticated");
 		}
 
 		const { user, auth0UserId } = data;
+
+		const trimmedFeedback = args.feedback?.trim();
+		if (trimmedFeedback) {
+			await ctx.runMutation(internal.users.mutations.storeUserFeedbackInternal, {
+				userId: user._id,
+				userEmail: user.email,
+				feedback: trimmedFeedback,
+				source: "account_deletion",
+			});
+		}
 
 		await ctx.runMutation(internal.users.mutations.deleteUserDataInternal, {
 			userId: user._id,
