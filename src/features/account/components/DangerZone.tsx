@@ -13,6 +13,27 @@ const DangerZone = () => {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
+	const onDeleteAccount = async () => {
+		setIsDeleting(true);
+		setError(null);
+		try {
+			await deleteAccount({
+				feedback: feedback.trim() || undefined,
+			});
+			logout({
+				logoutParams: {
+					returnTo: `${window.location.origin}/loggedOut`,
+				},
+			});
+			navigate({ to: "/loggedOut" });
+		} catch (e) {
+			setError(
+				e instanceof Error ? e.message : "Failed to delete account",
+			);
+			setIsDeleting(false);
+		}
+	};
+
 	return (
 		<div className="bg-red-950/20 border border-red-500/20 rounded-xl p-6">
 			<h2 className="text-lg font-semibold text-red-400 mb-2">Danger Zone</h2>
@@ -67,26 +88,7 @@ const DangerZone = () => {
 						</button>
 						<button
 							type="button"
-							onClick={async () => {
-								setIsDeleting(true);
-								setError(null);
-								try {
-									await deleteAccount({
-										feedback: feedback.trim() || undefined,
-									});
-									logout({
-										logoutParams: {
-											returnTo: `${window.location.origin}/loggedOut`,
-										},
-									});
-									navigate({ to: "/loggedOut" });
-								} catch (e) {
-									setError(
-										e instanceof Error ? e.message : "Failed to delete account",
-									);
-									setIsDeleting(false);
-								}
-							}}
+							onClick={onDeleteAccount}
 							disabled={isDeleting}
 							className="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700 border border-red-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						>
