@@ -20,7 +20,7 @@ const ChatPage = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// YouTube setup state
-	const [youtubeUrl, setYoutubeUrl] = useState("");
+	const [setupKey, setSetupKey] = useState(0);
 	const [selectedMode, setSelectedMode] =
 		useState<PromptModeValue>("interactive");
 	const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
@@ -233,16 +233,15 @@ const ChatPage = () => {
 		setConversationId(null);
 		setMessages([]);
 		resetToDefaults();
-		// Reset setup state
-		setYoutubeUrl("");
+		// Reset setup state: remount YoutubeSetup for fresh form
+		setSetupKey((k) => k + 1);
 		setSelectedMode("interactive");
 		setHasSetupCompleted(false);
 		setYoutubeVideoId(null);
 	};
 
-	const handleSetupSubmit = () => {
-		if (!youtubeUrl.trim()) return;
-		handleSetupFlow(youtubeUrl);
+	const handleSetupSubmit = (data: { youtubeUrl: string }) => {
+		handleSetupFlow(data.youtubeUrl);
 	};
 
 	const handleSelectMode = (mode: PromptModeValue) => {
@@ -268,10 +267,8 @@ const ChatPage = () => {
 				<AnimatePresence mode="wait">
 					{!hasSetupCompleted ? (
 						<YoutubeSetup
-							key="youtube-setup"
-							youtubeUrl={youtubeUrl}
+							key={`youtube-setup-${setupKey}`}
 							selectedMode={selectedMode}
-							onUrlChange={setYoutubeUrl}
 							onModeChange={handleSelectMode}
 							onSubmit={handleSetupSubmit}
 							isLoading={isFetchingTranscript}

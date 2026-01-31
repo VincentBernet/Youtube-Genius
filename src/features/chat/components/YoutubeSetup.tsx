@@ -1,33 +1,55 @@
+import { useKeyboard } from "@/commons/hooks/useKeyboard";
+import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
 import type { PromptModeValue } from "convex/types";
 import { TextInput } from "flowbite-react";
 import { Youtube } from "lucide-react";
 import { motion } from "motion/react";
-import { useKeyboard } from "@/commons/hooks/useKeyboard";
-import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const youtubeSetupSchema = z.object({
+	youtubeUrl: z
+		.httpUrl("Invalid YouTube URL")
+		.refine((url) => url.startsWith("https://www.youtube.com"), {
+			error: "Invalid YouTube URL (must start with https://www.youtube.com)",
+		  })});
+
+type YoutubeSetupFormValues = z.infer<typeof youtubeSetupSchema>;
 
 type Props = {
-	youtubeUrl: string;
 	selectedMode: PromptModeValue;
-	onUrlChange: (url: string) => void;
 	onModeChange: (mode: PromptModeValue) => void;
-	onSubmit: () => void;
+	onSubmit: (data: { youtubeUrl: string }) => void;
 	isLoading: boolean;
 	isError: boolean;
+	defaultUrl?: string;
 };
 
 const YoutubeSetup = ({
-	youtubeUrl,
 	selectedMode,
-	onUrlChange,
 	onModeChange,
 	onSubmit,
 	isLoading,
 	isError,
+	defaultUrl = "",
 }: Props) => {
+	const {
+		control,
+		handleSubmit,
+		watch,
+		formState: { errors },
+	} = useForm<YoutubeSetupFormValues>({
+		defaultValues: { youtubeUrl: defaultUrl },
+		resolver: zodResolver(youtubeSetupSchema),
+	});
+
+	const youtubeUrl = watch("youtubeUrl");
+
 	useKeyboard({
 		key: "Enter",
-		callback: onSubmit,
-		enabled: !!youtubeUrl.trim() && !isLoading,
+		callback: () => handleSubmit((data) => onSubmit(data))(),
+		enabled: !!youtubeUrl?.trim() && !isLoading,
 	});
 
 	return (
@@ -53,23 +75,40 @@ const YoutubeSetup = ({
 				</div>
 
 				{/* URL Input */}
-				<div className="relative">
-					<TextInput
-						type="url"
-						placeholder="Paste YouTube URL here..."
-						value={youtubeUrl}
-						onChange={(e) => onUrlChange(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" && youtubeUrl.trim() && !isLoading) {
-								e.preventDefault();
-								onSubmit();
-							}
-						}}
-						autoFocus
-						className="[&>input]:!bg-slate-800 [&>input]:!border-slate-600 [&>input]:!text-white [&>input]:placeholder:text-slate-400 [&>input]:focus:!border-cyan-500 [&>input]:focus:!ring-cyan-500 [&>input]:!py-4 [&>input]:!px-5 [&>input]:!rounded-xl"
-						sizing="lg"
-					/>
-				</div>
+				<form
+					onSubmit={handleSubmit((data) => onSubmit(data))}
+					className="space-y-2"
+				>
+					<div className="relative">
+						<Controller
+							name="youtubeUrl"
+							control={control}
+							render={({ field }) => (
+								<TextInput
+									type="url"
+									placeholder="Paste YouTube URL here..."
+									value={field.value}
+									onChange={(e) => field.onChange(e.target.value)}
+									onBlur={field.onBlur}
+									ref={field.ref}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" && youtubeUrl?.trim() && !isLoading) {
+											e.preventDefault();
+											handleSubmit((data) => onSubmit(data))();
+										}
+									}}
+									autoFocus
+									className="[&>input]:!bg-slate-800 [&>input]:!border-slate-600 [&>input]:!text-white [&>input]:placeholder:text-slate-400 [&>input]:focus:!border-cyan-500 [&>input]:focus:!ring-cyan-500 [&>input]:!py-4 [&>input]:!px-5 [&>input]:!rounded-xl"
+									sizing="lg"
+									color={errors.youtubeUrl ? "failure" : undefined}
+								/>
+							)}
+						/>
+					</div>
+					{errors.youtubeUrl?.message && (
+						<p className="text-sm text-red-500">{errors.youtubeUrl.message}</p>
+					)}
+				</form>
 
 				{/* Mode Selection Grid */}
 				<div className="grid grid-cols-2 gap-4">
