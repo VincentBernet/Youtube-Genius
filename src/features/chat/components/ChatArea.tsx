@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LLMInteraction from "@/features/chat/components/LLMInteraction";
 import UserInteraction from "@/features/chat/components/UserInteraction";
-import { getRows, type UIMessageWithSystem } from "@/features/chat/utils";
+import { isSystemUserMessage } from "@/features/chat/components/utils";
+import { getRows } from "@/features/chat/utils";
 
 type Props = {
 	messages: UIMessage[];
@@ -15,9 +16,6 @@ type Props = {
 	onSubmit: (e: React.FormEvent) => void;
 	onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 };
-
-const isSystemUserMessage = (m: UIMessage): boolean =>
-	m.role === "user" && (m as UIMessageWithSystem).systemMessage === true;
 
 const ChatArea = ({
 	messages,
