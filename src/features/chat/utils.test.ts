@@ -1,6 +1,11 @@
 import type { Doc, Id } from "convex/_generated/dataModel";
 import { describe, expect, it } from "vitest";
-import { convertToUIMessages, extractVideoId, getRows } from "./utils";
+import {
+	convertToUIMessages,
+	extractVideoId,
+	getRows,
+	type UIMessageWithSystem,
+} from "./utils";
 
 const createMockMessage = (
 	overrides: Partial<Doc<"messages">> & {
@@ -106,6 +111,89 @@ describe("convertToUIMessages", () => {
 		expect(result[0].parts[0]).toEqual({
 			type: "text",
 			text: "Here is some **markdown** content",
+		});
+	});
+
+	describe("systemMessage", () => {
+		it("should include systemMessage: true when db message has systemMessage: true", () => {
+			const dbMessages: Doc<"messages">[] = [
+				createMockMessage({
+					_id: "msg1" as Id<"messages">,
+					role: "user",
+					content: "Summarize the video",
+					createdAt: 1704067200000,
+					systemMessage: true,
+				}),
+			];
+
+			const result = convertToUIMessages(dbMessages);
+
+			expect(result).toHaveLength(1);
+			expect((result[0] as UIMessageWithSystem).systemMessage).toBe(true);
+		});
+
+		it("should include systemMessage: false when db message has systemMessage: false", () => {
+			const dbMessages: Doc<"messages">[] = [
+				createMockMessage({
+					_id: "msg1" as Id<"messages">,
+					role: "user",
+					content: "User typed this",
+					createdAt: 1704067200000,
+					systemMessage: false,
+				}),
+			];
+
+			const result = convertToUIMessages(dbMessages);
+
+			expect(result).toHaveLength(1);
+			expect((result[0] as UIMessageWithSystem).systemMessage).toBe(false);
+		});
+
+		it("should omit systemMessage when db message has no systemMessage field", () => {
+			const dbMessages: Doc<"messages">[] = [
+				createMockMessage({
+					_id: "msg1" as Id<"messages">,
+					role: "user",
+					content: "Legacy message",
+					createdAt: 1704067200000,
+				}),
+			];
+
+			const result = convertToUIMessages(dbMessages);
+
+			expect(result).toHaveLength(1);
+			expect("systemMessage" in result[0]).toBe(false);
+		});
+
+		it("should preserve systemMessage per message in multiple messages", () => {
+			const dbMessages: Doc<"messages">[] = [
+				createMockMessage({
+					_id: "msg1" as Id<"messages">,
+					role: "user",
+					content: "Summarize the video",
+					createdAt: 1704067200000,
+					systemMessage: true,
+				}),
+				createMockMessage({
+					_id: "msg2" as Id<"messages">,
+					role: "assistant",
+					content: "Here is the summary.",
+					createdAt: 1704067260000,
+				}),
+				createMockMessage({
+					_id: "msg3" as Id<"messages">,
+					role: "user",
+					content: "Follow-up question",
+					createdAt: 1704067320000,
+					systemMessage: false,
+				}),
+			];
+
+			const result = convertToUIMessages(dbMessages);
+
+			expect((result[0] as UIMessageWithSystem).systemMessage).toBe(true);
+			expect("systemMessage" in result[1]).toBe(false);
+			expect((result[2] as UIMessageWithSystem).systemMessage).toBe(false);
 		});
 	});
 });

@@ -38,6 +38,7 @@ export default defineSchema({
     role: messageRoleValidator,
     content: v.string(),
     createdAt: v.number(),
+    /** Define if a user message is a system message, if true, it is hidden in UI */
     systemMessage: v.optional(v.boolean()),
 
     // LLM-specific metadata (optional, only for assistant messages)

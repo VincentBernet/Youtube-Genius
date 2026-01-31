@@ -1,7 +1,10 @@
 import type { UIMessage } from "ai";
 import type { Doc } from "convex/_generated/dataModel";
 
-export type UIMessageWithSystem = UIMessage & { systemMessage?: boolean };
+export type UIMessageWithSystem = UIMessage & {
+	/** Define if a user message is a system message, if true, it is hidden in UI */
+	systemMessage?: boolean;
+};
 
 // Convert Convex messages to UIMessage format for useChat (keeps full history for API)
 export const convertToUIMessages = (
@@ -12,7 +15,9 @@ export const convertToUIMessages = (
 		role: msg.role,
 		parts: [{ type: "text" as const, text: msg.content }],
 		createdAt: new Date(msg.createdAt),
-		...(msg.systemMessage !== undefined && { systemMessage: msg.systemMessage }),
+		...(msg.systemMessage !== undefined && {
+			systemMessage: msg.systemMessage,
+		}),
 	}));
 };
 

@@ -2,12 +2,14 @@ import { v } from 'convex/values';
 import { internalMutation, mutation } from '../_generated/server';
 import { modelValidator, promptModeValidator } from '../types';
 
-// Creates a new conversation with the first user message
+/**  Creates a new conversation with the first user message */
 export const createWithFirstMessage = mutation({
 	args: {
 		content: v.string(),
 		title: v.string(),
 		systemPrompt: v.string(),
+		/** Define if a user message is a system message, if true, it is hidden in UI */
+		systemMessage: v.optional(v.boolean()),
 		mode: promptModeValidator,
 		model: modelValidator,
 		youtubeVideoId: v.id('youtubeVideos'),
@@ -48,7 +50,7 @@ export const createWithFirstMessage = mutation({
 			role: 'user',
 			content: args.content,
 			createdAt: now,
-			systemMessage: true,
+			systemMessage: args.systemMessage,
 		});
 
 		return conversationId;
