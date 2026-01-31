@@ -2,10 +2,10 @@ import type { UIMessage } from "@ai-sdk/react";
 import { Textarea } from "flowbite-react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import LLMInteraction from "@/features/chat/components/LLMInteraction";
 import UserInteraction from "@/features/chat/components/UserInteraction";
-import { getRows } from "@/features/chat/utils";
+import { getRows, type UIMessageWithSystem } from "@/features/chat/utils";
 
 type Props = {
 	messages: UIMessage[];
@@ -15,6 +15,9 @@ type Props = {
 	onSubmit: (e: React.FormEvent) => void;
 	onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 };
+
+const isSystemUserMessage = (m: UIMessage): boolean =>
+	m.role === "user" && (m as UIMessageWithSystem).systemMessage === true;
 
 const ChatArea = ({
 	messages,
@@ -29,8 +32,14 @@ const ChatArea = ({
 	const prevMessagesLengthRef = useRef(messages.length);
 	const [showScrollButton, setShowScrollButton] = useState(false);
 
-	// Find index of the last user message for ref assignment
-	const lastUserMessageIndex = messages.reduce(
+	// Hide user messages sent by the system (e.g. first auto message, "Summarize" button)
+	const visibleMessages = useMemo(
+		() => messages.filter((m) => !isSystemUserMessage(m)),
+		[messages],
+	);
+
+	// Find index of the last visible user message for ref assignment
+	const lastUserMessageIndex = visibleMessages.reduce(
 		(lastIndex, msg, index) => (msg.role === "user" ? index : lastIndex),
 		-1,
 	);
@@ -47,14 +56,14 @@ const ChatArea = ({
 		return () => observer.disconnect();
 	}, []);
 
-	// Scroll when a new user message is added
+	// Scroll when a new visible user message is added
 	useEffect(() => {
-		const lastMessage = messages[messages.length - 1];
+		const lastVisible = visibleMessages[visibleMessages.length - 1];
 		const isNewMessage = messages.length > prevMessagesLengthRef.current;
 
 		if (
 			isNewMessage &&
-			lastMessage?.role === "user" &&
+			lastVisible?.role === "user" &&
 			lastUserMessageRef.current
 		) {
 			lastUserMessageRef.current.scrollIntoView({
@@ -64,7 +73,7 @@ const ChatArea = ({
 		}
 
 		prevMessagesLengthRef.current = messages.length;
-	}, [messages]);
+	}, [messages, visibleMessages]);
 
 	const scrollToBottom = () => {
 		bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,7 +88,7 @@ const ChatArea = ({
 			className="flex-1 flex flex-col pt-8 pb-4 px-4 max-w-4xl mx-auto w-full min-h-0"
 		>
 			<div className="flex flex-col gap-8 flex-1">
-				{messages.map((message, index) => (
+				{visibleMessages.map((message, index) => (
 					<div
 						key={message.id}
 						ref={index === lastUserMessageIndex ? lastUserMessageRef : null}
@@ -91,8 +100,8 @@ const ChatArea = ({
 						)}
 					</div>
 				))}
-				{/* Spacer to allow user message to scroll to top - always present after 2+ user messages */}
-				{messages.filter((m) => m.role === "user").length >= 2 && (
+				{/* Spacer to allow user message to scroll to top - always present after 2+ visible user messages */}
+				{visibleMessages.filter((m) => m.role === "user").length >= 2 && (
 					<div className="min-h-[70vh] shrink-0" />
 				)}
 				{/* Bottom marker for scroll detection */}

@@ -1,15 +1,18 @@
 import type { UIMessage } from "ai";
 import type { Doc } from "convex/_generated/dataModel";
 
-// Convert Convex messages to UIMessage format for useChat
+export type UIMessageWithSystem = UIMessage & { systemMessage?: boolean };
+
+// Convert Convex messages to UIMessage format for useChat (keeps full history for API)
 export const convertToUIMessages = (
 	dbMessages: Doc<"messages">[],
-): UIMessage[] => {
+): UIMessageWithSystem[] => {
 	return dbMessages.map((msg) => ({
 		id: msg._id,
 		role: msg.role,
 		parts: [{ type: "text" as const, text: msg.content }],
 		createdAt: new Date(msg.createdAt),
+		...(msg.systemMessage !== undefined && { systemMessage: msg.systemMessage }),
 	}));
 };
 

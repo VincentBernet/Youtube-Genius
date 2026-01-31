@@ -38,7 +38,8 @@ export default defineSchema({
     role: messageRoleValidator,
     content: v.string(),
     createdAt: v.number(),
-    
+    systemMessage: v.optional(v.boolean()),
+
     // LLM-specific metadata (optional, only for assistant messages)
     metadata: v.optional(v.object({
       model: modelValidator,

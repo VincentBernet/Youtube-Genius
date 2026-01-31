@@ -42,12 +42,13 @@ export const createWithFirstMessage = mutation({
 			updatedAt: now,
 		});
 
-		// Create the first user message
+		// Create the first user message (system-sent, hidden in UI)
 		await ctx.db.insert('messages', {
 			conversationId,
 			role: 'user',
 			content: args.content,
 			createdAt: now,
+			systemMessage: true,
 		});
 
 		return conversationId;
@@ -59,6 +60,7 @@ export const addUserMessage = mutation({
 	args: {
 		conversationId: v.id('conversations'),
 		content: v.string(),
+		systemMessage: v.optional(v.boolean()),
 	},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
@@ -90,6 +92,7 @@ export const addUserMessage = mutation({
 			role: 'user',
 			content: args.content,
 			createdAt: now,
+			...(args.systemMessage !== undefined && { systemMessage: args.systemMessage }),
 		});
 
 		// Update conversation's updatedAt timestamp
