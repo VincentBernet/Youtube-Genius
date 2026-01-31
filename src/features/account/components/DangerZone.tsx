@@ -25,7 +25,6 @@ const DangerZone = () => {
 					returnTo: `${window.location.origin}/loggedOut`,
 				},
 			});
-			navigate({ to: "/loggedOut" });
 		} catch (e) {
 			setError(
 				e instanceof Error ? e.message : "Failed to delete account",
@@ -65,6 +64,7 @@ const DangerZone = () => {
 					<div>
 						<textarea
 							id="deletion-feedback"
+							aria-label="Feedback, optional"
 							value={feedback}
 							onChange={(e) => setFeedback(e.target.value)}
 							placeholder="Your feedback helps us improve. Optional but appreciated 🙇"

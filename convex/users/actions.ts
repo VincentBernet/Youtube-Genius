@@ -32,9 +32,10 @@ export const deleteAccount = action({
 		const clientId = process.env.AUTH0_MANAGEMENT_CLIENT_ID;
 		const clientSecret = process.env.AUTH0_MANAGEMENT_CLIENT_SECRET;
 
+		/** TODO: Should throw an error, currently not deleting info in OAuth */
 		if (!domain || !clientId || !clientSecret) {
 			console.error(
-				"Missing AUTH0_DOMAIN, AUTH0_MANAGEMENT_CLIENT_ID, or AUTH0_MANAGEMENT_CLIENT_SECRET"
+				"[Convex Backend] ❌ Missing AUTH0_DOMAIN, AUTH0_MANAGEMENT_CLIENT_ID, or AUTH0_MANAGEMENT_CLIENT_SECRET"
 			);
 			return;
 		}
@@ -52,7 +53,7 @@ export const deleteAccount = action({
 
 		if (!tokenRes.ok) {
 			const errText = await tokenRes.text();
-			console.error("Auth0 token request failed:", tokenRes.status, errText);
+			console.error("[Convex Backend] ❌ Auth0 token request failed:", tokenRes.status, errText);
 			throw new Error("Failed to obtain Auth0 Management API token");
 		}
 
