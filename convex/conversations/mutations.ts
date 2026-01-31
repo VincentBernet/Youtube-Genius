@@ -2,12 +2,14 @@ import { v } from 'convex/values';
 import { internalMutation, mutation } from '../_generated/server';
 import { modelValidator, promptModeValidator } from '../types';
 
-// Creates a new conversation with the first user message
+/**  Creates a new conversation with the first user message */
 export const createWithFirstMessage = mutation({
 	args: {
 		content: v.string(),
 		title: v.string(),
 		systemPrompt: v.string(),
+		/** Define if a user message is a system message, if true, it is hidden in UI */
+		systemMessage: v.optional(v.boolean()),
 		mode: promptModeValidator,
 		model: modelValidator,
 		youtubeVideoId: v.id('youtubeVideos'),
@@ -42,12 +44,13 @@ export const createWithFirstMessage = mutation({
 			updatedAt: now,
 		});
 
-		// Create the first user message
+		// Create the first user message (system-sent, hidden in UI)
 		await ctx.db.insert('messages', {
 			conversationId,
 			role: 'user',
 			content: args.content,
 			createdAt: now,
+			systemMessage: args.systemMessage,
 		});
 
 		return conversationId;
@@ -59,6 +62,7 @@ export const addUserMessage = mutation({
 	args: {
 		conversationId: v.id('conversations'),
 		content: v.string(),
+		systemMessage: v.optional(v.boolean()),
 	},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
@@ -90,6 +94,7 @@ export const addUserMessage = mutation({
 			role: 'user',
 			content: args.content,
 			createdAt: now,
+			...(args.systemMessage !== undefined && { systemMessage: args.systemMessage }),
 		});
 
 		// Update conversation's updatedAt timestamp
