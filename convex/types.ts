@@ -45,3 +45,7 @@ export const promptModeValidator = v.union(
 	v.literal("interactive"),
 	v.literal("key-points"),
 );
+
+export const userFeedbackSourceValidator = v.union(
+	v.literal("account_deletion"),
+);

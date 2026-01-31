@@ -12,6 +12,7 @@ import type * as conversations_mutations from "../conversations/mutations.js";
 import type * as conversations_queries from "../conversations/queries.js";
 import type * as http from "../http.js";
 import type * as types from "../types.js";
+import type * as users_actions from "../users/actions.js";
 import type * as users_mutations from "../users/mutations.js";
 import type * as youtube_mutations from "../youtube/mutations.js";
 import type * as youtube_queries from "../youtube/queries.js";
@@ -27,6 +28,7 @@ declare const fullApi: ApiFromModules<{
   "conversations/queries": typeof conversations_queries;
   http: typeof http;
   types: typeof types;
+  "users/actions": typeof users_actions;
   "users/mutations": typeof users_mutations;
   "youtube/mutations": typeof youtube_mutations;
   "youtube/queries": typeof youtube_queries;

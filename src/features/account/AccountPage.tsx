@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Globe, Mail, Shield, User } from "lucide-react";
+import DangerZone from "@/features/account/components/DangerZone";
 import InfoRow from "@/features/account/components/InfoRow";
 
 const AccountPage = () => {
@@ -57,9 +58,7 @@ const AccountPage = () => {
 							Account Information
 						</h2>
 						<div className="space-y-4">
-							<InfoRow label="Full Name" value={user?.name} />
 							<InfoRow label="Nickname" value={user?.nickname} />
-							<InfoRow label="Email" value={user?.email} />
 							<InfoRow
 								label="Last Updated"
 								value={
@@ -87,34 +86,9 @@ const AccountPage = () => {
 								value={user?.sub?.split("|")[0] || "OAuth"}
 							/>
 						</div>
-
-						{/* Theme Toggle Placeholder */}
-						<div className="mt-6 pt-4 border-t border-slate-700/50">
-							<div className="flex items-center justify-between">
-								<span className="text-slate-400 text-sm">Dark Mode</span>
-								<div className="w-12 h-6 bg-cyan-500 rounded-full relative cursor-pointer">
-									<div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
-
-				{/* Danger Zone */}
-				<div className="bg-red-950/20 border border-red-500/20 rounded-xl p-6">
-					<h2 className="text-lg font-semibold text-red-400 mb-2">
-						Danger Zone
-					</h2>
-					<p className="text-slate-400 text-sm mb-4">
-						Permanently delete your account and all associated data.
-					</p>
-					<button
-						type="button"
-						className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
-					>
-						Delete Account
-					</button>
-				</div>
+				<DangerZone />
 			</div>
 		</div>
 	);
