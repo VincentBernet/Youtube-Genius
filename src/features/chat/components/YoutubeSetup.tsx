@@ -1,19 +1,20 @@
-import { useKeyboard } from "@/commons/hooks/useKeyboard";
-import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { PromptModeValue } from "convex/types";
 import { TextInput } from "flowbite-react";
 import { Youtube } from "lucide-react";
 import { motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useKeyboard } from "@/commons/hooks/useKeyboard";
+import { MODE_ICONS, PROMPT_MODES } from "@/features/chat/config";
 
 const youtubeSetupSchema = z.object({
 	youtubeUrl: z
 		.httpUrl("Invalid YouTube URL")
 		.refine((url) => url.startsWith("https://www.youtube.com"), {
 			error: "Invalid YouTube URL (must start with https://www.youtube.com)",
-		  })});
+		}),
+});
 
 type YoutubeSetupFormValues = z.infer<typeof youtubeSetupSchema>;
 

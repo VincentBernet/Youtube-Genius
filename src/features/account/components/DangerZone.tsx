@@ -1,5 +1,4 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { useAction } from "convex/react";
 import { useState } from "react";
@@ -7,7 +6,6 @@ import { useState } from "react";
 const DangerZone = () => {
 	const { logout } = useAuth0();
 	const deleteAccount = useAction(api.users.actions.deleteAccount);
-	const navigate = useNavigate();
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const [feedback, setFeedback] = useState("");
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -26,9 +24,7 @@ const DangerZone = () => {
 				},
 			});
 		} catch (e) {
-			setError(
-				e instanceof Error ? e.message : "Failed to delete account",
-			);
+			setError(e instanceof Error ? e.message : "Failed to delete account");
 			setIsDeleting(false);
 		}
 	};
@@ -63,7 +59,6 @@ const DangerZone = () => {
 					</p>
 					<div>
 						<textarea
-							id="deletion-feedback"
 							aria-label="Feedback, optional"
 							value={feedback}
 							onChange={(e) => setFeedback(e.target.value)}
