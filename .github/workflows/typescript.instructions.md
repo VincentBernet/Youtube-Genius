@@ -4,7 +4,7 @@ This file defines our TypeScript coding conventions for Copilot code review.
 
 - Use Camel case for variable and functions
 - For constant inside dico or utilities files use all-uppercase, same for enum
-- Use single quote as double quote
+- Use single quotes instead of double quotes
 - Do not use FC notation to type your component
 - Use arrow function and NO regular function
 - Use type as precise / narrow as possible (enum or ‘string literal types’ over string if possible)
