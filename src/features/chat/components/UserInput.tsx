@@ -1,5 +1,6 @@
 import { Textarea } from "flowbite-react";
 import { ArrowUp } from "lucide-react";
+import type { KeyboardEvent, SyntheticEvent } from "react";
 import { useMemo, useState } from "react";
 import { getRows } from "@/features/chat/utils";
 
@@ -13,7 +14,7 @@ const UserInput = ({ onSubmit, isSubmitting }: Props) => {
 
 	const rows = useMemo(() => getRows(input), [input]);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: SyntheticEvent) => {
 		e.preventDefault();
 		const trimmedInput = input.trim();
 		if (!trimmedInput || isSubmitting) return;
@@ -22,7 +23,7 @@ const UserInput = ({ onSubmit, isSubmitting }: Props) => {
 		setInput("");
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+	const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
 			handleSubmit(e);
@@ -42,6 +43,7 @@ const UserInput = ({ onSubmit, isSubmitting }: Props) => {
 			/>
 			<button
 				type="submit"
+				aria-label="Submit message"
 				disabled={isSubmitting || !input.trim()}
 				className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white text-slate-800 rounded-full hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
 			>
