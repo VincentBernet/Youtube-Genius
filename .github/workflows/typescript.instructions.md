@@ -1,0 +1,12 @@
+# TypeScript Coding Standards
+
+This file defines our TypeScript coding conventions for Copilot code review.
+
+- Use Camel case for variable and functions
+- For constant inside dico or utilities files use all-uppercase, same for enum
+- Use single quote as double quote
+- Do not use FC notation to type your component
+- Use arrow function and NO regular function
+- Use type as precise / narrow as possible (enum or ‘string literal types’ over string if possible)
+- Use type over interface
+- Add type in your import (import type { RandomType} from '...')
