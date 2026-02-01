@@ -291,7 +291,9 @@ describe("getRows", () => {
 	});
 
 	it(`should cap at ${MAX_ROWS_INPUT} for text with more than 9 line breaks`, () => {
-		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12")).toBe(MAX_ROWS_INPUT);
+		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12")).toBe(
+			MAX_ROWS_INPUT,
+		);
 	});
 
 	it("should count only line breaks for input with only newlines", () => {
