@@ -14,7 +14,6 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 const ChatPage = () => {
-	const [input, setInput] = useState("");
 	const [conversationId, setConversationId] =
 		useState<Id<"conversations"> | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -165,13 +164,10 @@ const ChatPage = () => {
 		}
 	}, [dbMessages, setMessages]);
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!input.trim() || isSubmitting) return;
+	const handleSubmit = async (messageContent: string) => {
+		if (!messageContent || isSubmitting) return;
 
-		const messageContent = input.trim();
 		setIsSubmitting(true);
-		setInput("");
 
 		try {
 			let currentConversationId = conversationId;
@@ -214,13 +210,6 @@ const ChatPage = () => {
 			console.error("Failed to send message:", error);
 		} finally {
 			setIsSubmitting(false);
-		}
-	};
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === "Enter" && !e.shiftKey) {
-			e.preventDefault();
-			handleSubmit(e);
 		}
 	};
 
@@ -280,11 +269,8 @@ const ChatPage = () => {
 						<ChatArea
 							key="chat-area"
 							messages={messages}
-							input={input}
 							isSubmitting={isSubmitting}
-							onInputChange={setInput}
 							onSubmit={handleSubmit}
-							onKeyDown={handleKeyDown}
 						/>
 					)}
 				</AnimatePresence>

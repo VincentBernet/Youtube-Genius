@@ -1,30 +1,19 @@
 import type { UIMessage } from "@ai-sdk/react";
-import { Textarea } from "flowbite-react";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LLMInteraction from "@/features/chat/components/LLMInteraction";
+import UserInput from "@/features/chat/components/UserInput";
 import UserInteraction from "@/features/chat/components/UserInteraction";
 import { isSystemUserMessage } from "@/features/chat/components/utils";
-import { getRows } from "@/features/chat/utils";
 
 type Props = {
 	messages: UIMessage[];
-	input: string;
 	isSubmitting: boolean;
-	onInputChange: (value: string) => void;
-	onSubmit: (e: React.FormEvent) => void;
-	onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+	onSubmit: (message: string) => void;
 };
 
-const ChatArea = ({
-	messages,
-	input,
-	isSubmitting,
-	onInputChange,
-	onSubmit,
-	onKeyDown,
-}: Props) => {
+const ChatArea = ({ messages, isSubmitting, onSubmit }: Props) => {
 	const lastUserMessageRef = useRef<HTMLDivElement>(null);
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const prevMessagesLengthRef = useRef(messages.length);
@@ -37,9 +26,13 @@ const ChatArea = ({
 	);
 
 	// Find index of the last visible user message for ref assignment
-	const lastUserMessageIndex = visibleMessages.reduce(
-		(lastIndex, msg, index) => (msg.role === "user" ? index : lastIndex),
-		-1,
+	const lastUserMessageIndex = useMemo(
+		() =>
+			visibleMessages.reduce(
+				(lastIndex, msg, index) => (msg.role === "user" ? index : lastIndex),
+				-1,
+			),
+		[visibleMessages],
 	);
 
 	// Track if bottom is visible to show/hide scroll button
@@ -121,24 +114,7 @@ const ChatArea = ({
 						</motion.button>
 					)}
 				</AnimatePresence>
-				<form onSubmit={onSubmit} className="relative">
-					<Textarea
-						className={`!bg-slate-800 !border-slate-600 !text-white placeholder:text-slate-400 focus:!border-cyan-500 focus:!ring-cyan-500 !pr-14 !p-5 resize-none ${getRows(input) === 1 ? "rounded-full" : "squircle rounded-[28px]"}`}
-						rows={getRows(input)}
-						placeholder="Ask a question to YoutubeGenius"
-						onChange={(e) => onInputChange(e.target.value)}
-						onKeyDown={onKeyDown}
-						value={input}
-						disabled={isSubmitting}
-					/>
-					<button
-						type="submit"
-						disabled={isSubmitting || !input.trim()}
-						className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white text-slate-800 rounded-full hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-					>
-						<ArrowUp size={20} />
-					</button>
-				</form>
+				<UserInput onSubmit={onSubmit} isSubmitting={isSubmitting} />
 			</div>
 		</motion.section>
 	);

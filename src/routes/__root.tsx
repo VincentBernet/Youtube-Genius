@@ -1,3 +1,4 @@
+import NotFound from "@/commons/components/NotFound";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -6,12 +7,12 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import NotFound from "@/commons/components/NotFound";
+import type { ReactNode } from "react";
 import { ThemeInit } from "../../.flowbite-react/init";
 import Header from "../commons/components/Header";
 import appCss from "../styles.css?url";
 
-const RootDocument = ({ children }: { children: React.ReactNode }) => {
+const RootDocument = ({ children }: { children: ReactNode }) => {
 	return (
 		<html lang="en" className="bg-slate-900">
 			<head>
