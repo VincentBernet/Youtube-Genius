@@ -38,6 +38,8 @@ export const extractVideoId = (url: string): string | null => {
 	return null;
 };
 
+export const MAX_ROWS_INPUT = 10;
+
 /** Calculate rows based on content
  * - \n is line break
  * - we consider 100 characters per line
@@ -45,6 +47,7 @@ export const extractVideoId = (url: string): string | null => {
  */
 export const getRows = (input: string) => {
 	/** /n is line break, and we consider 100 characters per line */
-	const numberOfLines = Math.floor(input.length / 100) + (input.match(/\n/g) || []).length;
-	return Math.min(Math.max(1, numberOfLines + 1), 10);
+	const numberOfLines =
+		Math.floor(input.length / 100) + (input.match(/\n/g) || []).length;
+	return Math.min(Math.max(1, numberOfLines + 1), MAX_ROWS_INPUT);
 };
