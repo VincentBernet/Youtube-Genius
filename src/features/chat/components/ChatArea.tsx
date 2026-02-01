@@ -26,10 +26,12 @@ const ChatArea = ({ messages, isSubmitting, onSubmit }: Props) => {
 	);
 
 	// Find index of the last visible user message for ref assignment
-	const lastUserMessageIndex = useMemo(() => visibleMessages.reduce(
-			(lastIndex, msg, index) => (msg.role === "user" ? index : lastIndex),
-			-1,
-		),
+	const lastUserMessageIndex = useMemo(
+		() =>
+			visibleMessages.reduce(
+				(lastIndex, msg, index) => (msg.role === "user" ? index : lastIndex),
+				-1,
+			),
 		[visibleMessages],
 	);
 

@@ -322,7 +322,7 @@ describe("getRows", () => {
 
 		it("should combine character count and line breaks", () => {
 			// 100 chars + 1 newline = floor(101/100) + 1 = 1 + 1 = 2, result = 3
-			const input = "a".repeat(100) + "\n";
+			const input = `${"a".repeat(100)}\n`;
 			expect(getRows(input)).toBe(3);
 		});
 
