@@ -4,6 +4,7 @@ import {
 	convertToUIMessages,
 	extractVideoId,
 	getRows,
+	MAX_ROWS_INPUT,
 	type UIMessageWithSystem,
 } from "./utils";
 
@@ -269,7 +270,7 @@ describe("getRows", () => {
 		expect(getRows("")).toBe(1);
 	});
 
-	it("should return 1 for single line text", () => {
+	it("should return 1 for single line text under 100 characters", () => {
 		expect(getRows("Hello, world!")).toBe(1);
 	});
 
@@ -281,12 +282,16 @@ describe("getRows", () => {
 		expect(getRows("Line 1\nLine 2\nLine 3")).toBe(3);
 	});
 
-	it("should return 6 for text with 5 line breaks (maximum)", () => {
+	it("should return 6 for text with 5 line breaks", () => {
 		expect(getRows("1\n2\n3\n4\n5\n6")).toBe(6);
 	});
 
-	it("should cap at 6 for text with more than 5 line breaks", () => {
-		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10")).toBe(6);
+	it("should return 10 for text with 9 line breaks (maximum)", () => {
+		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10")).toBe(10);
+	});
+
+	it(`should cap at ${MAX_ROWS_INPUT} for text with more than 9 line breaks`, () => {
+		expect(getRows("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12")).toBe(MAX_ROWS_INPUT);
 	});
 
 	it("should count only line breaks for input with only newlines", () => {
@@ -295,5 +300,33 @@ describe("getRows", () => {
 
 	it("should handle Windows-style line endings (counts only \\n)", () => {
 		expect(getRows("Hello\r\nworld")).toBe(2);
+	});
+
+	describe("character-based row calculation (100 chars per line)", () => {
+		it("should return 2 for exactly 100 characters (no line breaks)", () => {
+			const input = "a".repeat(100);
+			expect(getRows(input)).toBe(2);
+		});
+
+		it("should return 2 for 101-199 characters (no line breaks)", () => {
+			const input = "a".repeat(150);
+			expect(getRows(input)).toBe(2);
+		});
+
+		it("should return 3 for 200 characters (no line breaks)", () => {
+			const input = "a".repeat(200);
+			expect(getRows(input)).toBe(3);
+		});
+
+		it("should combine character count and line breaks", () => {
+			// 100 chars + 1 newline = floor(101/100) + 1 = 1 + 1 = 2, result = 3
+			const input = "a".repeat(100) + "\n";
+			expect(getRows(input)).toBe(3);
+		});
+
+		it(`should cap at ${MAX_ROWS_INPUT} even with many characters`, () => {
+			const input = "a".repeat(2000);
+			expect(getRows(input)).toBe(MAX_ROWS_INPUT);
+		});
 	});
 });

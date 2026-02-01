@@ -1,8 +1,6 @@
----
-description: Typescript best practice
-globs: *.tsx, *.ts
-alwaysApply: false
----
+# TypeScript Coding Standards
+
+This file defines our TypeScript coding conventions for Copilot code review.
 
 - Use Camel case for variable and functions
 - For constant inside dico or utilities files use all-uppercase, same for enum
