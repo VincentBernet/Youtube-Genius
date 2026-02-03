@@ -1,4 +1,3 @@
-import NotFound from "@/commons/components/NotFound";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -8,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { ReactNode } from "react";
+import NotFound from "@/commons/components/NotFound";
 import { ThemeInit } from "../../.flowbite-react/init";
 import Header from "../commons/components/Header";
 import appCss from "../styles.css?url";
